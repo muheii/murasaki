@@ -1,2 +1,2 @@
-# kizami
-Kizami is an immersion media library for Japanese learners that tracks all immersion data for the most popular forms of media.
+# murasaki
+Murasaki is a multimedia library designed to help users track their time immersing in the Japanese language.
