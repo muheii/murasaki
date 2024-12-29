@@ -1,0 +1,29 @@
+node_modules
+src-tauri/test_database.db
+
+# Output
+.output
+.vercel
+/.svelte-kit
+/build
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Env
+.env
+.env.*
+!.env.example
+!.env.test
+
+# Vite
+vite.config.js.timestamp-*
+vite.config.ts.timestamp-*
+
+# IDE and Editor Configurations
+.vscode
+.idea
+.prettierrc
+.prettierignore
+eslint.config.js
