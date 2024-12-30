@@ -14,7 +14,7 @@
 
     onMount(async () => {
         try {
-            const result = await invoke('read_content');
+            const result = await invoke('read_items');
             items = result as Item[];
         } catch (error) {
             console.error('Failed to load content:', error);

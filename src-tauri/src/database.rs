@@ -1,4 +1,6 @@
 use rusqlite::{Connection, Result};
+use directories::ProjectDirs;
+use std::{fs::create_dir_all, path::PathBuf};
 use serde::Serialize;
 
 #[derive(Debug, Serialize)]
@@ -8,6 +10,17 @@ pub struct Item {
   description: String,
   thumbnail_path: String,
   executable_path: String
+}
+
+fn get_database_path() -> Result<PathBuf, String> {
+  let proj_dirs = ProjectDirs::from("com", "muhei", "murasaki")
+    .expect("Failed to find project directories.");
+
+  // Ensure the data directory exists to prevent rusqlite Connection from hanging.
+  create_dir_all(proj_dirs.data_dir()).map_err(|e| e.to_string())?;
+  let db_path = proj_dirs.data_dir().join("database.db");
+
+  Ok(db_path)
 }
 
 #[tauri::command]
@@ -20,7 +33,9 @@ pub fn write_item(content_type: &str, name: &str, description: &str, thumbnail_p
     executable_path: executable_path.to_string()
   };
 
-  let db = Connection::open("./test_database.db").map_err(|e| e.to_string())?;
+  let db_path = get_database_path()?;
+  let db = Connection::open(db_path).map_err(|e| e.to_string())?;
+
   match db.execute(
     "
       CREATE TABLE content (
@@ -49,9 +64,12 @@ pub fn write_item(content_type: &str, name: &str, description: &str, thumbnail_p
 }
 
 #[tauri::command]
-pub fn read_content() -> Result<Vec<Item>, String> {
-  let db = Connection::open("./test_database.db").map_err(|e| e.to_string())?;
+pub fn read_items() -> Result<Vec<Item>, String> {
+  let db_path = get_database_path()?;
+  let db = Connection::open(db_path).map_err(|e| e.to_string())?;
+
   let mut stmt = db.prepare("SELECT content_type, name, description, thumbnail_path, executable_path FROM content").map_err(|e| e.to_string())?;
+
   let item_iter = stmt.query_map([], |row| {
     Ok(Item {
       content_type: row.get(0)?,
