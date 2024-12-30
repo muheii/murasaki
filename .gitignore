@@ -1,5 +1,4 @@
 node_modules
-src-tauri/test_database.db
 
 # Output
 .output
