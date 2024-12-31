@@ -9,7 +9,8 @@ struct JikanResponse {
 pub struct Anime {
     mal_id: u64,
     title: String,
-    images: Images
+    images: Images,
+    synopsis: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -30,6 +31,7 @@ pub async fn get_test(query: &str) -> Result<Vec<Anime>, String> {
 
     let jikan_response: JikanResponse = resp.json().await.map_err(|e| e.to_string())?;
 
+
     let anime: Vec<Anime> = jikan_response.data.iter().take(10).map(|anime_data| Anime {
         mal_id: anime_data.mal_id,
         title: anime_data.title.clone(),
@@ -37,7 +39,8 @@ pub async fn get_test(query: &str) -> Result<Vec<Anime>, String> {
             jpg: Jpg {
                 image_url: anime_data.images.jpg.image_url.clone(),
             }
-        }
+        },
+        synopsis: anime_data.synopsis.clone(),
     }).collect();
 
     Ok(anime)

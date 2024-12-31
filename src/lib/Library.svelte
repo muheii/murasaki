@@ -1,6 +1,6 @@
 <script lang="ts">
     import { onMount } from 'svelte';
-    import { invoke } from '@tauri-apps/api/tauri';
+    import { invoke } from '@tauri-apps/api/core';
 
     interface Item {
         content_type: string;
