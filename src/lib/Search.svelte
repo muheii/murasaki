@@ -1,4 +1,5 @@
 <script lang="ts">
+	import type { NumericRange } from '@sveltejs/kit';
     import { invoke } from '@tauri-apps/api/core';
 
     interface Content {
@@ -12,21 +13,41 @@
         synopsis: string;
     }
 
+    interface Vns {
+        title: string;
+        image: {
+            url: string;
+        }
+        id: string;
+        description: string;
+    }
+
     let anime: Content[] = [];
+    let vns: Vns[] = [];
     let query = '';
 
-    async function get_test() {
+    async function search_mal() {
         try {
-            const result = await invoke('get_test', { query: query });
+            const result = await invoke('search_mal', { query: query });
             anime = result as Content[];
         } catch (error) {
-            console.error('Failed to get test:', error);
+            console.error('Failed to get anime:', error);
+        }
+    }
+
+    async function search_vndb() {
+        try {
+            const result = await invoke('search_vndb', { query: query });
+            vns = result as Vns[];
+        } catch (error) {
+            console.error('Failed to get VNs:', error);
         }
     }
 </script>
 
 <input type="text" bind:value={query} placeholder="Search for anime..." />
-<button onclick={get_test}>Search</button>
+<button onclick={search_mal}>Search Anime</button>
+<button onclick={search_vndb}>Search VNDB</button>
 
 <div class="container">
     {#each anime as show}
@@ -37,6 +58,16 @@
                 <p>{show.synopsis}</p>
             </div>
             <p>{show.mal_id}</p>
+        </div>
+    {/each}
+    {#each vns as vn}
+        <div class="tile">
+            <h2>{vn.title}</h2>
+            <div>
+                <img src={vn.image.url} alt={vn.title} />
+                <p>{vn.description}</p>
+            </div>
+            <p>{vn.id}</p>
         </div>
     {/each}
 </div>
