@@ -1,3 +1,4 @@
+use crate::config::Config;
 use crate::database::Database;
 use crate::types::{
     ApiError, ContentSearchResult, ContentType, JikanResponse, Result, StorageItem, VndbResponse,
@@ -70,4 +71,14 @@ pub async fn get_from_library(
     content_type: ContentType,
 ) -> Result<Vec<StorageItem>> {
     db.read_items(content_type)
+}
+
+#[tauri::command]
+pub async fn load_config() -> Result<Config> {
+    Config::load()
+}
+
+#[tauri::command]
+pub async fn save_config(config: Config) -> Result<()> {
+    config.save()
 }

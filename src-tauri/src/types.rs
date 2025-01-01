@@ -115,6 +115,7 @@ pub enum ApiError {
     FetchError(String),
     ParseError(String),
     DatabaseError(String),
+    ConfigError(String),
 }
 
 impl From<reqwest::Error> for ApiError {
@@ -135,6 +136,7 @@ impl std::fmt::Display for ApiError {
             ApiError::FetchError(e) => write!(f, "Fetch error: {}", e),
             ApiError::ParseError(e) => write!(f, "Parse error: {}", e),
             ApiError::DatabaseError(e) => write!(f, "Database error: {}", e),
+            ApiError::ConfigError(e) => write!(f, "Config error: {}", e),
         }
     }
 }
