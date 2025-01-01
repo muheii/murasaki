@@ -1,47 +1,64 @@
 <script lang="ts">
-    import { onMount } from 'svelte';
     import { invoke } from '@tauri-apps/api/core';
+    import { ContentType, type StorageItem } from '../types/content';
+	import { onMount } from 'svelte';
 
-    interface Item {
-        content_type: string;
-        name: string;
-        description: string;
-        thumbnail_path: string;
-        executable_path: string;
+    export let contentType: ContentType;
+    let items: StorageItem[] = [];
+
+    async function loadLibrary() {
+        try {
+            items = await invoke('get_from_library', {
+                contentType
+            });
+        } catch (error) {
+            console.error('Failed to load library:', error);
+        }
     }
 
-    let items: Item[] = [];
-
-    onMount(async () => {
-        try {
-            const result = await invoke('read_items');
-            items = result as Item[];
-        } catch (error) {
-            console.error('Failed to load content:', error);
-        }
-    });
+    onMount(loadLibrary);
 </script>
 
+<div class="container">
+    {#each items as item}
+        <div class="tile">
+            <div>
+                <h2>{item.name}</h2>
+            </div>
+            <div>
+                <img src={item.thumbnail_path} alt={item.name} />
+                <p>{item.description || 'No description available'}</p>
+            </div>
+        </div>
+    {/each}
+</div>
+
 <style>
+    .container {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
+    }
+
     .tile {
         border: 1px solid #ccc;
-        padding: 16px;
-        margin: 16px;
         border-radius: 8px;
+        padding: 16px;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
-    .thumbnail {
-        max-width: 100px;
-        max-height: 100px;
+
+    .tile img {
+        max-width: 100%;
+        border-radius: 4px;
+    }
+
+    .tile h2 {
+        font-size: 1.2em;
+        margin: 0.5em 0;
+    }
+
+    .tile p {
+        font-size: 0.9em;
+        color: #555;
     }
 </style>
-
-{#each items as item}
-    <div class="tile">
-        <img src={item.thumbnail_path} alt={item.name} class="thumbnail" />
-        <h2>{item.name}</h2>
-        <p><strong>Type:</strong> {item.content_type}</p>
-        <p><strong>Description:</strong> {item.description}</p>
-        <p><strong>Executable Path:</strong> {item.executable_path}</p>
-    </div>
-{/each}

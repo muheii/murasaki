@@ -1,6 +1,5 @@
 <script>
     import { onMount } from 'svelte';
-    import Database from '../lib/Database.svelte'
 	import Search from '$lib/Search.svelte';
 
     let isLoading = true;
@@ -16,7 +15,6 @@
         <p>Loading...</p>
     </div>
 {:else}
-    <Database/>
     <Search/>
 {/if}
 

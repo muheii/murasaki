@@ -1,73 +1,46 @@
 <script lang="ts">
-	import type { NumericRange } from '@sveltejs/kit';
     import { invoke } from '@tauri-apps/api/core';
+    import { ContentType, type ContentSearchResult, type StorageItem } from '../types/content';
 
-    interface Content {
-        title: string;
-        images: {
-            jpg: {
-                image_url: string;
-            }
-        };
-        mal_id: number;
-        synopsis: string;
-    }
-
-    interface Vns {
-        title: string;
-        image: {
-            url: string;
-        }
-        id: string;
-        description: string;
-    }
-
-    let anime: Content[] = [];
-    let vns: Vns[] = [];
+    let searchResults: ContentSearchResult[] = [];
     let query = '';
 
-    async function search_mal() {
+    async function search(contentType: ContentType) {
         try {
-            const result = await invoke('search_mal', { query: query });
-            anime = result as Content[];
+            searchResults = await invoke('search_content', {
+                contentType,
+                query
+            });
         } catch (error) {
-            console.error('Failed to get anime:', error);
+            console.error('Search failed:', error);
         }
     }
 
-    async function search_vndb() {
+    async function addToLibrary(result: ContentSearchResult) {
         try {
-            const result = await invoke('search_vndb', { query: query });
-            vns = result as Vns[];
-        } catch (error) {
-            console.error('Failed to get VNs:', error);
+            await invoke('add_to_library', { searchResult: result });
+        } catch(error) {
+            console.error('Failed to add to library:', error);
         }
     }
 </script>
 
-<input type="text" bind:value={query} placeholder="Search for anime..." />
-<button onclick={search_mal}>Search Anime</button>
-<button onclick={search_vndb}>Search VNDB</button>
+<input type="text" bind:value={query} placeholder="Search for content..." />
+<button onclick={() => search(ContentType.Anime)}>Search Anime</button>
+<button onclick={() => search(ContentType.Vn)}>Search VNDB</button>
 
 <div class="container">
-    {#each anime as show}
+    {#each searchResults as result}
         <div class="tile">
-            <h2>{show.title}</h2>
             <div>
-                <img src={show.images.jpg.image_url} alt={show.title} />
-                <p>{show.synopsis}</p>
+                <h2>{result.title}</h2>
+                <button onclick={() => addToLibrary(result)}>Add to Library</button>
             </div>
-            <p>{show.mal_id}</p>
-        </div>
-    {/each}
-    {#each vns as vn}
-        <div class="tile">
-            <h2>{vn.title}</h2>
             <div>
-                <img src={vn.image.url} alt={vn.title} />
-                <p>{vn.description}</p>
+                <img src={result.image_url} alt={result.title} />
+                <p>{result.description || 'No description available'}</p>
             </div>
-            <p>{vn.id}</p>
+            <p>ID: {result.external_id}</p>
         </div>
     {/each}
 </div>
