@@ -19,6 +19,7 @@ fn main() {
             commands::get_from_library,
             commands::load_config,
             commands::save_config,
+            commands::launch_vn,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

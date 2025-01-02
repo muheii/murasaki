@@ -71,6 +71,14 @@ pub struct StorageItem {
     pub executable_path: String,
 }
 
+#[derive(Debug, Serialize, Deserialize)]
+pub struct TimeEntry {
+    pub id: u64,
+    pub content_id: u64,
+    pub start_time: String,
+    pub duration: u64,
+}
+
 impl From<(Anime, ContentType)> for ContentSearchResult {
     fn from((anime, content_type): (Anime, ContentType)) -> Self {
         Self {
@@ -116,6 +124,7 @@ pub enum ApiError {
     ParseError(String),
     DatabaseError(String),
     ConfigError(String),
+    LaunchError(String),
 }
 
 impl From<reqwest::Error> for ApiError {
@@ -137,6 +146,7 @@ impl std::fmt::Display for ApiError {
             ApiError::ParseError(e) => write!(f, "Parse error: {}", e),
             ApiError::DatabaseError(e) => write!(f, "Database error: {}", e),
             ApiError::ConfigError(e) => write!(f, "Config error: {}", e),
+            ApiError::LaunchError(e) => write!(f, "Launch error: {}", e),
         }
     }
 }

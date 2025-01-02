@@ -1,12 +1,16 @@
 use directories::ProjectDirs;
 use rusqlite::{Connection, Result as SqliteResult};
-use std::{fs::create_dir_all, path::PathBuf, sync::RwLock};
+use std::{
+    fs::create_dir_all,
+    path::PathBuf,
+    sync::{Arc, RwLock},
+};
 
-use crate::types::{ApiError, ContentType, Result, StorageItem};
+use crate::types::{ApiError, ContentType, Result, StorageItem, TimeEntry};
 
 #[derive(Debug)]
 pub struct Database {
-    conn: RwLock<Connection>,
+    conn: Arc<RwLock<Connection>>,
 }
 
 unsafe impl Send for Database {}
@@ -32,8 +36,20 @@ impl Database {
         )
         .map_err(|e| ApiError::DatabaseError(e.to_string()))?;
 
+        conn.execute(
+            "CREATE TABLE IF NOT EXISTS time_entries (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                content_id INTEGER NOT NULL,
+                start_time TEXT NOT NULL,
+                duration_secs INTEGER NOT NULL,
+                FOREIGN KEY(content_id) REFERENCES content(id)
+            )",
+            [],
+        )
+        .map_err(|e| ApiError::DatabaseError(e.to_string()))?;
+
         Ok(Database {
-            conn: RwLock::new(conn),
+            conn: Arc::new(RwLock::new(conn)),
         })
     }
 
@@ -91,6 +107,21 @@ impl Database {
             .map_err(|e| ApiError::DatabaseError(e.to_string()))?;
 
         Ok(items)
+    }
+
+    pub fn log_time_entry(&self, entry: &TimeEntry) -> Result<()> {
+        let conn = self
+            .conn
+            .write()
+            .map_err(|e| ApiError::DatabaseError(e.to_string()))?;
+
+        conn.execute(
+            "INSERT INTO time_entries (content_id, start_time, duration_secs) VALUES (?1, ?2, ?3)",
+            (entry.content_id, &entry.start_time, entry.duration),
+        )
+        .map_err(|e| ApiError::DatabaseError(e.to_string()))?;
+
+        Ok(())
     }
 }
 

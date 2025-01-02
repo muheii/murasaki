@@ -24,7 +24,6 @@
 
 {#if config}
     <h1>Settings</h1>
-    <button onclick={() => console.log(config)}>Log Config</button>
     <button onclick={saveConfig}>Save Config</button>
     <h2>media player settings</h2>
     <label>

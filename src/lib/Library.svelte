@@ -16,6 +16,15 @@
         }
     }
 
+    async function launchVn(storageItem: StorageItem) {
+        try {
+            storageItem.executable_path = 'C:\\Users\\Hunter\\Downloads\\Soukou Akki Muramasa\\Soukou Akki Muramasa\\Muramasa.exe'
+            await invoke('launch_vn', { storageItem });
+        } catch (error) {
+            console.error('Failed to launch VN:', error);
+        }
+    }
+
     onMount(loadLibrary);
 </script>
 
@@ -29,6 +38,7 @@
                 <img src={item.thumbnail_path} alt={item.name} />
                 <p>{item.description || 'No description available'}</p>
             </div>
+            <button onclick={() => launchVn(item)}>Launch</button>
         </div>
     {/each}
 </div>

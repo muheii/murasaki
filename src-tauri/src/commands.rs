@@ -1,8 +1,14 @@
 use crate::config::Config;
 use crate::database::Database;
 use crate::types::{
-    ApiError, ContentSearchResult, ContentType, JikanResponse, Result, StorageItem, VndbResponse,
+    ApiError, ContentSearchResult, ContentType, JikanResponse, Result, StorageItem, TimeEntry,
+    VndbResponse,
 };
+use chrono::Local;
+#[cfg(target_os = "windows")]
+use std::os::windows::process::CommandExt;
+use std::process::Command;
+use std::time::Instant;
 use tauri::State;
 
 #[tauri::command]
@@ -81,4 +87,41 @@ pub async fn load_config() -> Result<Config> {
 #[tauri::command]
 pub async fn save_config(config: Config) -> Result<()> {
     config.save()
+}
+
+#[tauri::command]
+pub async fn launch_vn(db: State<'_, Database>, storage_item: StorageItem) -> Result<()> {
+    let start_time = Local::now();
+    let start_instant = Instant::now();
+
+    let mut entry = TimeEntry {
+        id: 0,
+        content_id: storage_item.id,
+        start_time: start_time.to_rfc3339(),
+        duration: 0,
+    };
+
+    let exe_path = std::path::Path::new(&storage_item.executable_path);
+    let working_dir = exe_path
+        .parent()
+        .ok_or_else(|| ApiError::LaunchError("Invalid executable path".to_string()))?;
+
+    let mut command = Command::new(exe_path);
+
+    // Change the working directory to avoid errors from the VN
+    command.current_dir(working_dir);
+
+    #[cfg(target_os = "windows")]
+    command.creation_flags(winapi::um::winbase::DETACHED_PROCESS);
+
+    if let Ok(mut child) = command.spawn() {
+        child
+            .wait()
+            .map_err(|e| ApiError::LaunchError(e.to_string()))?;
+        entry.duration = start_instant.elapsed().as_secs();
+        db.log_time_entry(&entry)
+            .map_err(|e| ApiError::DatabaseError(e.to_string()))?;
+    }
+
+    Ok(())
 }
