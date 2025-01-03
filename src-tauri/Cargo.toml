@@ -23,6 +23,8 @@ tauri = { version = "2.1.1", features = [] }
 tauri-plugin-dialog = "2"
 winapi = { version = "0.3", features = ["winbase"] }
 chrono = "0.4.39"
+anyhow = "1.0.95"
+anyhow-tauri = "1.0.0"
 
 [features]
 # this feature is used for production builds or when `devPath` points to the filesystem and the built-in dev server is disabled.

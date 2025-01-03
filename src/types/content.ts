@@ -18,5 +18,5 @@ export interface StorageItem {
     name: string;
     description?: string;
     thumbnail_path: string;
-    executable_path: string;
+    content_path: string;
 }

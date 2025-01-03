@@ -6,6 +6,8 @@ use database::Database;
 mod commands;
 mod config;
 mod database;
+mod launcher;
+mod search;
 mod types;
 
 fn main() {
@@ -19,7 +21,7 @@ fn main() {
             commands::get_from_library,
             commands::load_config,
             commands::save_config,
-            commands::launch_vn,
+            commands::launch_content,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

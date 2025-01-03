@@ -1,4 +1,4 @@
-use crate::types::{ApiError, Result};
+use anyhow::Result;
 use directories::ProjectDirs;
 use serde::{Deserialize, Serialize};
 use std::{fs::create_dir_all, path::PathBuf};
@@ -47,27 +47,21 @@ impl Config {
             return Ok(default_config);
         }
 
-        let content = std::fs::read_to_string(config_path)
-            .map_err(|e| ApiError::ConfigError(format!("Failed to read config: {}", e)))?;
+        let content = std::fs::read_to_string(config_path)?;
 
-        serde_json::from_str(&content)
-            .map_err(|e| ApiError::ConfigError(format!("Failed to parse config: {}", e)))
+        serde_json::from_str(&content).map_err(|e| anyhow::anyhow!(e))
     }
 
     pub fn save(&self) -> Result<()> {
         let config_path = get_config_path()?;
 
         if let Some(parent) = config_path.parent() {
-            create_dir_all(parent).map_err(|e| {
-                ApiError::ConfigError(format!("Failed to create config directory: {}", e))
-            })?;
+            create_dir_all(parent)?;
         }
 
-        let content = serde_json::to_string_pretty(self)
-            .map_err(|e| ApiError::ConfigError(format!("Failed to serialize config: {}", e)))?;
+        let content = serde_json::to_string_pretty(self)?;
 
-        std::fs::write(config_path, content)
-            .map_err(|e| ApiError::ConfigError(format!("Failed to write config: {}", e)))?;
+        std::fs::write(config_path, content)?;
 
         Ok(())
     }
@@ -75,7 +69,7 @@ impl Config {
 
 fn get_config_path() -> Result<PathBuf> {
     let proj_dirs = ProjectDirs::from("com", "muhei", "murasaki")
-        .ok_or_else(|| ApiError::ConfigError("Failed to find project directories.".into()))?;
+        .ok_or_else(|| anyhow::anyhow!("Failed to get project directories"))?;
 
     Ok(proj_dirs.config_dir().join("config.json"))
 }
