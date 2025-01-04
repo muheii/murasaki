@@ -1,6 +1,8 @@
 <script lang="ts">
     import { invoke } from '@tauri-apps/api/core';
     import { ContentType, type ContentSearchResult, type StorageItem } from '../types/content';
+	import { Input } from './components/ui/input';
+	import { Button } from './components/ui/button';
 
     let searchResults: ContentSearchResult[] = [];
     let query = '';
@@ -25,11 +27,42 @@
     }
 </script>
 
-<input type="text" bind:value={query} placeholder="Search for content..." />
-<button onclick={() => search(ContentType.Anime)}>Search Anime</button>
-<button onclick={() => search(ContentType.Vn)}>Search VNDB</button>
+<div class="flex gap-x-2 dark">
+    <Input  type="text" bind:value={query} placeholder="Search for content..." />
+    <Button onclick={() => search(ContentType.Anime)}>Search Anime</Button>
+    <Button onclick={() => search(ContentType.Vn)}>Search VNDB</Button>
+</div>
 
-<div class="container">
+<div class="light w-full">
+    <table class="w-full">
+        <thead>
+            <tr class="border-b border-zinc-700">
+                <th class="w-16"></th>
+                <th class="">Title</th>
+                <th class="">Description</th>
+                <th class="w-16"></th>
+            </tr>
+        </thead>
+        <tbody>
+            {#each searchResults as result}
+                <tr class="border-b border-zinc-700/50 hover:bg-zinc-800/50">
+                    <td class="py-2 px-4">
+                        <img src={result.image_url} alt={result.title} class="w-12 h-12 object-cover"/>
+                    </td>
+                    <td class="py-2 px-4">{result.title}</td>
+                    <td class="py-2 px-4 max-w-lg truncate">{result.description}</td>
+                    <td class="py-2 px-4">
+                        <Button variant="default" class="w-full" onclick={() => addToLibrary(result)}>
+                            Add to Library
+                        </Button>
+                    </td>
+                </tr>
+            {/each}
+        </tbody>
+    </table>
+</div>
+
+<!-- <div class="container">
     {#each searchResults as result}
         <div class="tile">
             <div>
@@ -43,34 +76,5 @@
             <p>ID: {result.external_id}</p>
         </div>
     {/each}
-</div>
+</div> -->
 
-<style>
-    .container {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 16px;
-    }
-
-    .tile {
-        border: 1px solid #ccc;
-        border-radius: 8px;
-        padding: 16px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    }
-
-    .tile img {
-        max-width: 100%;
-        border-radius: 4px;
-    }
-
-    .tile h2 {
-        font-size: 1.2em;
-        margin: 0.5em 0;
-    }
-
-    .tile p {
-        font-size: 0.9em;
-        color: #555;
-    }
-</style>

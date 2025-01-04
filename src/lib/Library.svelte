@@ -2,6 +2,7 @@
     import { invoke } from '@tauri-apps/api/core';
     import { ContentType, type StorageItem } from '../types/content';
 	import { onMount } from 'svelte';
+	import { Button } from './components/ui/button';
 
     export let contentType: ContentType;
     let items: StorageItem[] = [];
@@ -28,47 +29,31 @@
     onMount(loadLibrary);
 </script>
 
-<div class="container">
-    {#each items as item}
-        <div class="tile">
-            <div>
-                <h2>{item.name}</h2>
-            </div>
-            <div>
-                <img src={item.thumbnail_path} alt={item.name} />
-                <p>{item.description || 'No description available'}</p>
-            </div>
-            <button onclick={() => launchVn(item)}>Launch</button>
-        </div>
-    {/each}
+<div class="light w-full">
+    <table class="w-full">
+        <thead>
+            <tr class="border-b border-zinc-700">
+                <th class="w-16"></th>
+                <th class="">Title</th>
+                <th class="">Time Immersed</th>
+                <th class="w-16"></th>
+            </tr>
+        </thead>
+        <tbody>
+            {#each items as item}
+                <tr class="border-b border-zinc-700/50 hover:bg-zinc-800/50">
+                    <td class="py-2 px-4">
+                        <img src={item.thumbnail_path} alt={item.name} class="w-12 h-12 object-cover"/>
+                    </td>
+                    <td class="py-2 px-4">{item.name}</td>
+                    <td class="py-2 px-4">0</td>
+                    <td class="py-2 px-4">
+                        <Button variant="default" class="w-full" onclick={() => launchVn(item)}>
+                            Launch
+                        </Button>
+                    </td>
+                </tr>
+            {/each}
+        </tbody>
+    </table>
 </div>
-
-<style>
-    .container {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 16px;
-    }
-
-    .tile {
-        border: 1px solid #ccc;
-        border-radius: 8px;
-        padding: 16px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    }
-
-    .tile img {
-        max-width: 100%;
-        border-radius: 4px;
-    }
-
-    .tile h2 {
-        font-size: 1.2em;
-        margin: 0.5em 0;
-    }
-
-    .tile p {
-        font-size: 0.9em;
-        color: #555;
-    }
-</style>
