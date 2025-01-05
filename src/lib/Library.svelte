@@ -3,6 +3,7 @@
     import { ContentType, type StorageItem } from '../types/content';
 	import { onMount } from 'svelte';
 	import { Button } from './components/ui/button';
+	import ContentDialog from './ContentDialog.svelte';
 
     export let contentType: ContentType;
     let items: StorageItem[] = [];
@@ -48,9 +49,10 @@
                     <td class="py-2 px-4">{item.name}</td>
                     <td class="py-2 px-4">0</td>
                     <td class="py-2 px-4">
-                        <Button variant="default" class="w-full" onclick={() => launchVn(item)}>
+                        <!-- <Button variant="default" class="w-full" onclick={() => launchVn(item)}>
                             Launch
-                        </Button>
+                        </Button> -->
+                        <ContentDialog item={item}></ContentDialog>
                     </td>
                 </tr>
             {/each}

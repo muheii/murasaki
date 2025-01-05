@@ -13,7 +13,7 @@ pub struct Anime {
     pub url: String,
     pub images: JikanImages,
     pub title: String,
-    pub episodes: u64,
+    pub episodes: Option<u64>,
     pub synopsis: Option<String>,
     pub season: Option<String>,
     pub year: Option<u64>,
@@ -26,7 +26,7 @@ pub struct JikanImages {
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct JikanJpg {
-    pub image_url: String,
+    pub large_image_url: String,
 }
 
 #[derive(Deserialize, Debug)]
@@ -52,7 +52,7 @@ impl From<(Anime, ContentType)> for ContentSearchResult {
             external_id: anime.mal_id.to_string(),
             title: anime.title,
             description: anime.synopsis,
-            image_url: anime.images.jpg.image_url,
+            image_url: anime.images.jpg.large_image_url,
             content_type,
         }
     }

@@ -52,7 +52,7 @@
                     <td class="py-2 px-4">{result.title}</td>
                     <td class="py-2 px-4 max-w-lg truncate">{result.description}</td>
                     <td class="py-2 px-4">
-                        <Button variant="default" class="w-full" onclick={() => addToLibrary(result)}>
+                        <Button variant="secondary" class="w-full" onclick={() => addToLibrary(result)}>
                             Add to Library
                         </Button>
                     </td>
@@ -61,20 +61,3 @@
         </tbody>
     </table>
 </div>
-
-<!-- <div class="container">
-    {#each searchResults as result}
-        <div class="tile">
-            <div>
-                <h2>{result.title}</h2>
-                <button onclick={() => addToLibrary(result)}>Add to Library</button>
-            </div>
-            <div>
-                <img src={result.image_url} alt={result.title} />
-                <p>{result.description || 'No description available'}</p>
-            </div>
-            <p>ID: {result.external_id}</p>
-        </div>
-    {/each}
-</div> -->
-
