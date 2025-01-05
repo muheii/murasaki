@@ -2243,6 +2243,7 @@ dependencies = [
  "anyhow-tauri",
  "chrono",
  "directories",
+ "regex",
  "reqwest",
  "rusqlite",
  "serde",

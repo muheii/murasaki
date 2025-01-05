@@ -23,6 +23,15 @@ pub struct UserActivity {
     pub content_id: u64,
 }
 
+#[derive(Debug)]
+pub struct Episode {
+    pub id: u64,
+    pub content_id: u64,
+    pub episode_number: u64,
+    pub path: String,
+    pub watched: bool,
+}
+
 impl From<ContentSearchResult> for StorageItem {
     fn from(result: ContentSearchResult) -> Self {
         Self {

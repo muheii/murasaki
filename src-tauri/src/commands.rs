@@ -1,5 +1,6 @@
 use crate::config::Config;
 use crate::database::Database;
+use crate::search::scan_anime_episodes;
 use crate::types::common::{ContentSearchResult, ContentType};
 use crate::types::database::StorageItem;
 use anyhow_tauri::TAResult;
@@ -19,6 +20,12 @@ pub async fn add_to_library(
     search_result: ContentSearchResult,
 ) -> TAResult<()> {
     let storage_item = StorageItem::from(search_result);
+
+    if storage_item.content_type == ContentType::Anime {
+        let result = scan_anime_episodes(storage_item.id, &storage_item.content_path);
+        println!("{:?}", result);
+    }
+
     Ok(db.write_item(&storage_item)?)
 }
 

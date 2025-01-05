@@ -33,7 +33,7 @@ impl ContentType {
     }
 }
 
-pub async fn launch_vn(storage_item: &StorageItem) -> Result<()> {
+async fn launch_vn(storage_item: &StorageItem) -> Result<()> {
     let exe_path = std::path::Path::new(&storage_item.content_path);
     let working_dir = exe_path
         .parent()

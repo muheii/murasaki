@@ -26,8 +26,8 @@
         <thead>
             <tr class="border-b border-zinc-700">
                 <th class="w-16"></th>
-                <th class="">Title</th>
-                <th class="">Time Immersed</th>
+                <th class="text-left">Title</th>
+                <th class="text-left">Time Immersed</th>
                 <th class="w-16"></th>
             </tr>
         </thead>

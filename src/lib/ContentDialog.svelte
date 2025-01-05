@@ -24,7 +24,7 @@
                 <img class="h-full w-full object-cover" src={item.thumbnail_path} alt={item.name}>
             </div>
 
-            <div class="flex h-full flex-col gap-4 px-4">
+            <div class="flex h-full flex-col gap-4 pl-4">
                 <div class="flex-1 overflow-y-auto">
                     <p class="text-sm">{item.description || 'no description available'}</p>
                 </div>
