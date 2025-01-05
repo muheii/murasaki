@@ -1,5 +1,6 @@
 <script lang="ts">
     import * as Dialog from '$lib/components/ui/dialog/index.js';
+	import VnControls from '../routes/vn/VnControls.svelte';
 	import { ContentType, type StorageItem } from '../types/content';
 	import { Button, buttonVariants } from './components/ui/button';
 	import { Input } from './components/ui/input';
@@ -26,15 +27,14 @@
             <div class="flex h-full flex-col gap-4 px-4">
                 <div class="flex-1 overflow-y-auto">
                     <p class="text-sm">{item.description || 'no description available'}</p>
+                </div>
+
+                <div>
                     {#if item.content_type === ContentType.Anime}
                         anime
                     {:else}
-                        vn
+                        <VnControls storageItem={item}></VnControls>
                     {/if}
-                </div>
-                <div class="flex flex-col gap-4">
-                    <Input type="text" placeholder="Enter a path..."/>
-                    <Button>Launch</Button>
                 </div>
             </div>
         </div>

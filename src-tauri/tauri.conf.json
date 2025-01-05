@@ -27,7 +27,15 @@
       }
     ],
     "security": {
-      "csp": null
+      "csp": null,
+      "capabilities": [
+        {
+          "identifier": "dialog-capability",
+          "description": "Adds dialog capability for all windows",
+          "windows": ["*"],
+          "permissions": ["dialog:default", "dialog:allow-open"]
+        }
+      ]
     }
   }
 }

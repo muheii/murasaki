@@ -14,6 +14,7 @@ fn main() {
     let db = Database::new().expect("Failed to initialize database");
 
     tauri::Builder::default()
+        .plugin(tauri_plugin_dialog::init())
         .manage(db)
         .invoke_handler(tauri::generate_handler![
             commands::search_content,

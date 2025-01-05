@@ -18,15 +18,6 @@
         }
     }
 
-    async function launchVn(storageItem: StorageItem) {
-        try {
-            storageItem.content_path = 'C:\\Users\\Hunter\\Downloads\\Soukou Akki Muramasa\\Soukou Akki Muramasa\\Muramasa.exe'
-            await invoke('launch_content', { storageItem });
-        } catch (error) {
-            console.error('Failed to launch VN:', error);
-        }
-    }
-
     onMount(loadLibrary);
 </script>
 
