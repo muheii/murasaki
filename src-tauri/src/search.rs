@@ -54,12 +54,13 @@ async fn search_vn(query: &str) -> Result<Vec<Content>> {
         .collect())
 }
 
-pub fn scan_anime_episodes(content_id: u64, path: &str) -> Result<Vec<Episode>> {
+pub fn scan_anime_episodes(content_id: &str, path: &str) -> Result<Vec<Episode>> {
     println!("Starting episode scan in directory: {}", path);
 
-    let episode_pattern =
+    let standard_pattern =
         Regex::new(r"(?i)(?:e|episode|\s-\s)?\s*?(\d{1,3})(?:v\d)?(?:\s*?|$|\[|\.)").unwrap();
-    println!("Using pattern: {}", episode_pattern.as_str());
+    // For cases like Serial Experiments Lain - S01E01.mkv
+    let season_ep_pattern = Regex::new(r"(?i)S\d+E(\d+)").unwrap();
 
     let mut episodes: Vec<_> = fs::read_dir(path)?
         .filter_map(|entry| {
@@ -67,7 +68,7 @@ pub fn scan_anime_episodes(content_id: u64, path: &str) -> Result<Vec<Episode>> 
             let path = entry.path();
             let filename = path.file_name()?.to_string_lossy();
 
-            if let Some(caps) = episode_pattern.captures(&filename) {
+            if let Some(caps) = standard_pattern.captures(&filename) {
                 println!("Capture groups: {:?}", caps);
                 for i in 0..caps.len() {
                     println!("Group {}: {:?}", i, caps.get(i).map(|m| m.as_str()));
@@ -91,11 +92,16 @@ pub fn scan_anime_episodes(content_id: u64, path: &str) -> Result<Vec<Episode>> 
                 return None;
             }
 
-            episode_pattern.captures(&filename).and_then(|cap| {
-                cap[1].parse::<u64>().ok().map(|episode_num| {
-                    println!("Successfully parsed episode #{}", episode_num);
-                    (episode_num, path.to_string_lossy().to_string())
-                })
+            if let Some(cap) = season_ep_pattern.captures(&filename) {
+                let episode_num = cap[1].parse::<u64>().ok()?;
+                return Some((episode_num, path.to_string_lossy().to_string()));
+            }
+
+            standard_pattern.captures(&filename).and_then(|cap| {
+                cap[1]
+                    .parse::<u64>()
+                    .ok()
+                    .map(|episode_num| (episode_num, path.to_string_lossy().to_string()))
             })
         })
         .collect();
@@ -106,7 +112,7 @@ pub fn scan_anime_episodes(content_id: u64, path: &str) -> Result<Vec<Episode>> 
         .into_iter()
         .map(|(num, path)| Episode {
             id: 0,
-            content_id,
+            content_id: content_id.to_string(),
             episode_number: num,
             path,
             watched: false,

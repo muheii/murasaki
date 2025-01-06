@@ -5,7 +5,7 @@ use std::{fs::create_dir_all, path::PathBuf, sync::RwLock};
 
 use crate::types::{
     common::{Content, ContentType},
-    database::UserActivity,
+    database::{Episode, UserActivity},
 };
 
 #[derive(Debug)]
@@ -51,6 +51,17 @@ impl Database {
                 minutes_read INTEGER,
                 characters_read INTEGER,
                 FOREIGN KEY(content_id) REFERENCES content(id)
+            )",
+            [],
+        )?;
+
+        conn.execute(
+            "CREATE TABLE IF NOT EXISTS episodes (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                content_id TEXT NOT NULL,
+                episode_number INTEGER NOT NULL,
+                path TEXT NOT NULL,
+                watched BOOL NOT NULL
             )",
             [],
         )?;
@@ -142,6 +153,48 @@ impl Database {
         )?;
 
         Ok(())
+    }
+
+    pub fn write_episodes(&self, episodes: &[Episode]) -> Result<()> {
+        let conn = self
+            .conn
+            .write()
+            .map_err(|e| anyhow::Error::msg(e.to_string()))?;
+
+        for episode in episodes {
+            conn.execute("INSERT INTO episodes (content_id, episode_number, path, watched) VALUES (?1, ?2, ?3, ?4)",
+            (episode.content_id.clone(), episode.episode_number, episode.path.clone(), episode.watched),
+            )?;
+        }
+
+        Ok(())
+    }
+
+    pub fn read_episodes(&self, external_id: &str) -> Result<Vec<Episode>> {
+        let conn = self
+            .conn
+            .write()
+            .map_err(|e| anyhow::Error::msg(e.to_string()))?;
+
+        let mut stmt = conn.prepare(
+            "SELECT id, content_id, episode_number, path, watched 
+            FROM episodes 
+            WHERE content_id = ?1",
+        )?;
+
+        let episodes = stmt.query_map([external_id], |row| {
+            Ok(Episode {
+                id: row.get(0)?,
+                content_id: row.get(1)?,
+                episode_number: row.get(2)?,
+                path: row.get(3)?,
+                watched: row.get(4)?,
+            })
+        })?;
+
+        let episodes = episodes.collect::<SqliteResult<Vec<Episode>>>()?;
+
+        Ok(episodes)
     }
 }
 

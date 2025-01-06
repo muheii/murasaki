@@ -1,5 +1,6 @@
 <script lang="ts">
     import * as Dialog from '$lib/components/ui/dialog/index.js';
+	import AnimeControls from '../routes/anime/AnimeControls.svelte';
 	import VnControls from '../routes/vn/VnControls.svelte';
 	import { ContentType, type Content } from '../types/content';
 	import { Button, buttonVariants } from './components/ui/button';
@@ -31,7 +32,7 @@
 
                 <div>
                     {#if item.content_type === ContentType.Anime}
-                        anime
+                        <AnimeControls anime={item}></AnimeControls>
                     {:else}
                         <VnControls vn={item}></VnControls>
                     {/if}

@@ -18,3 +18,10 @@ export interface Content {
     rating?: number;
     votecount?: number;
 }
+
+export interface Episode {
+    external_id: string;
+    episode_number: number;
+    path: string;
+    watched: boolean;
+}

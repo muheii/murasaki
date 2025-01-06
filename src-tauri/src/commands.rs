@@ -2,6 +2,7 @@ use crate::config::Config;
 use crate::database::Database;
 use crate::search::scan_anime_episodes;
 use crate::types::common::{Content, ContentType};
+use crate::types::database::Episode;
 use anyhow_tauri::TAResult;
 use tauri::State;
 
@@ -14,8 +15,12 @@ pub async fn search_content(content_type: ContentType, query: &str) -> TAResult<
 pub async fn add_to_library(db: State<'_, Database>, search_result: Content) -> TAResult<()> {
     if search_result.content_type == ContentType::Anime {
         if let Some(path) = &search_result.file_path {
-            let result = scan_anime_episodes(search_result.id, path);
-            println!("{:?}", result);
+            match scan_anime_episodes(&search_result.external_id, path) {
+                Ok(episodes) => {
+                    db.write_episodes(&episodes)?;
+                }
+                Err(e) => println!("Failed to scan episodes: {}", e),
+            }
         }
     }
 
@@ -45,4 +50,9 @@ pub async fn launch_content(db: State<'_, Database>, content: Content) -> TAResu
     let user_activity = content.content_type.launch(&content).await?;
     db.write_user_activity(&user_activity)?;
     Ok(())
+}
+
+#[tauri::command]
+pub async fn get_episodes(db: State<'_, Database>, external_id: &str) -> TAResult<Vec<Episode>> {
+    Ok(db.read_episodes(external_id)?)
 }

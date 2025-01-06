@@ -13,7 +13,7 @@ pub struct UserActivity {
 #[derive(Debug, Deserialize, Serialize)]
 pub struct Episode {
     pub id: u64,
-    pub content_id: u64,
+    pub content_id: String,
     pub episode_number: u64,
     pub path: String,
     pub watched: bool,

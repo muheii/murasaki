@@ -52,6 +52,7 @@
                     <td class="py-2 px-4">{result.title}</td>
                     <td class="py-2 px-4 max-w-lg truncate">{result.description}</td>
                     <td class="py-2 px-4">
+                        <Input bind:value={result.file_path}></Input>
                         <Button variant="secondary" class="w-full" onclick={() => addToLibrary(result)}>
                             Add to Library
                         </Button>
