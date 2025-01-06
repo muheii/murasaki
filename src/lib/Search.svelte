@@ -1,10 +1,10 @@
 <script lang="ts">
     import { invoke } from '@tauri-apps/api/core';
-    import { ContentType, type ContentSearchResult, type StorageItem } from '../types/content';
+    import { ContentType, type Content } from '../types/content';
 	import { Input } from './components/ui/input';
 	import { Button } from './components/ui/button';
 
-    let searchResults: ContentSearchResult[] = [];
+    let searchResults: Content[] = [];
     let query = '';
 
     async function search(contentType: ContentType) {
@@ -18,7 +18,7 @@
         }
     }
 
-    async function addToLibrary(result: ContentSearchResult) {
+    async function addToLibrary(result: Content) {
         try {
             await invoke('add_to_library', { searchResult: result });
         } catch(error) {
@@ -47,7 +47,7 @@
             {#each searchResults as result}
                 <tr class="border-b border-zinc-700/50 hover:bg-zinc-800/50">
                     <td class="py-2 px-4">
-                        <img src={result.image_url} alt={result.title} class="w-12 h-12 object-cover"/>
+                        <img src={result.image_path} alt={result.title} class="w-12 h-12 object-cover"/>
                     </td>
                     <td class="py-2 px-4">{result.title}</td>
                     <td class="py-2 px-4 max-w-lg truncate">{result.description}</td>

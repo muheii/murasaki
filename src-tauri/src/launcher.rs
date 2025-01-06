@@ -3,11 +3,11 @@ use chrono::Local;
 use std::time::Instant;
 use std::{os::windows::process::CommandExt, process::Command};
 
+use crate::types::common::{Content, ContentType};
 use crate::types::database::UserActivity;
-use crate::types::{common::ContentType, database::StorageItem};
 
 impl ContentType {
-    pub async fn launch(&self, storage_item: &StorageItem) -> Result<UserActivity> {
+    pub async fn launch(&self, storage_item: &Content) -> Result<UserActivity> {
         let start_instant = Instant::now();
 
         let mut user_activity = UserActivity {
@@ -33,8 +33,12 @@ impl ContentType {
     }
 }
 
-async fn launch_vn(storage_item: &StorageItem) -> Result<()> {
-    let exe_path = std::path::Path::new(&storage_item.content_path);
+async fn launch_vn(storage_item: &Content) -> Result<()> {
+    let file_path = storage_item
+        .file_path
+        .as_ref()
+        .ok_or_else(|| anyhow::anyhow!("File path is None"))?;
+    let exe_path = std::path::Path::new(file_path);
     let working_dir = exe_path
         .parent()
         .ok_or_else(|| anyhow::anyhow!("Invalid executable path"))?;

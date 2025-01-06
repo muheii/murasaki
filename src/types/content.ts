@@ -3,20 +3,18 @@ export enum ContentType {
     Vn = 'Vn'
 }
 
-export interface ContentSearchResult {
+export interface Content {
     external_id: string;
+    content_type: ContentType;
     title: string;
+    title_japanese?: string;
     description?: string;
-    image_url: string;
-    content_type: ContentType;
-}
-
-export interface StorageItem {
-    id: number;
-    content_type: ContentType;
-    external_id: string;
-    name: string;
-    description?: string;
-    thumbnail_path: string;
-    content_path: string;
+    file_path?: string;
+    image_path: string;
+    release_date?: string;
+    episodes?: number;
+    length_minutes?: number;
+    length_votes?: number;
+    rating?: number;
+    votecount?: number;
 }

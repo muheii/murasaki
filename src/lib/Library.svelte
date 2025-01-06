@@ -1,12 +1,12 @@
 <script lang="ts">
     import { invoke } from '@tauri-apps/api/core';
-    import { ContentType, type StorageItem } from '../types/content';
+    import { ContentType, type Content } from '../types/content';
 	import { onMount } from 'svelte';
 	import { Button } from './components/ui/button';
 	import ContentDialog from './ContentDialog.svelte';
 
     export let contentType: ContentType;
-    let items: StorageItem[] = [];
+    let items: Content[] = [];
 
     async function loadLibrary() {
         try {
@@ -35,9 +35,9 @@
             {#each items as item}
                 <tr class="border-b border-zinc-700/50 hover:bg-zinc-800/50">
                     <td class="py-2 px-4">
-                        <img src={item.thumbnail_path} alt={item.name} class="w-12 h-12 object-cover"/>
+                        <img src={item.image_path} alt={item.title} class="w-12 h-12 object-cover"/>
                     </td>
-                    <td class="py-2 px-4">{item.name}</td>
+                    <td class="py-2 px-4">{item.title}</td>
                     <td class="py-2 px-4">0</td>
                     <td class="py-2 px-4">
                         <!-- <Button variant="default" class="w-full" onclick={() => launchVn(item)}>

@@ -1,39 +1,32 @@
 use crate::config::Config;
 use crate::database::Database;
 use crate::search::scan_anime_episodes;
-use crate::types::common::{ContentSearchResult, ContentType};
-use crate::types::database::StorageItem;
+use crate::types::common::{Content, ContentType};
 use anyhow_tauri::TAResult;
 use tauri::State;
 
 #[tauri::command]
-pub async fn search_content(
-    content_type: ContentType,
-    query: &str,
-) -> TAResult<Vec<ContentSearchResult>> {
+pub async fn search_content(content_type: ContentType, query: &str) -> TAResult<Vec<Content>> {
     Ok(content_type.search(query).await?)
 }
 
 #[tauri::command]
-pub async fn add_to_library(
-    db: State<'_, Database>,
-    search_result: ContentSearchResult,
-) -> TAResult<()> {
-    let storage_item = StorageItem::from(search_result);
-
-    if storage_item.content_type == ContentType::Anime {
-        let result = scan_anime_episodes(storage_item.id, &storage_item.content_path);
-        println!("{:?}", result);
+pub async fn add_to_library(db: State<'_, Database>, search_result: Content) -> TAResult<()> {
+    if search_result.content_type == ContentType::Anime {
+        if let Some(path) = &search_result.file_path {
+            let result = scan_anime_episodes(search_result.id, path);
+            println!("{:?}", result);
+        }
     }
 
-    Ok(db.write_item(&storage_item)?)
+    Ok(db.write_item(&search_result)?)
 }
 
 #[tauri::command]
 pub async fn get_from_library(
     db: State<'_, Database>,
     content_type: ContentType,
-) -> TAResult<Vec<StorageItem>> {
+) -> TAResult<Vec<Content>> {
     Ok(db.read_items(content_type)?)
 }
 
@@ -48,8 +41,8 @@ pub async fn save_config(config: Config) -> TAResult<()> {
 }
 
 #[tauri::command]
-pub async fn launch_content(db: State<'_, Database>, storage_item: StorageItem) -> TAResult<()> {
-    let user_activity = storage_item.content_type.launch(&storage_item).await?;
+pub async fn launch_content(db: State<'_, Database>, content: Content) -> TAResult<()> {
+    let user_activity = content.content_type.launch(&content).await?;
     db.write_user_activity(&user_activity)?;
     Ok(())
 }

@@ -1,6 +1,6 @@
 use crate::types::{
     api::{JikanResponse, VndbResponse},
-    common::{ContentSearchResult, ContentType},
+    common::{Content, ContentType},
     database::Episode,
 };
 
@@ -9,7 +9,7 @@ use regex::Regex;
 use std::fs;
 
 impl ContentType {
-    pub async fn search(&self, query: &str) -> Result<Vec<ContentSearchResult>> {
+    pub async fn search(&self, query: &str) -> Result<Vec<Content>> {
         match self {
             ContentType::Anime => Ok(search_anime(query).await?),
             ContentType::Vn => Ok(search_vn(query).await?),
@@ -17,20 +17,20 @@ impl ContentType {
     }
 }
 
-async fn search_anime(query: &str) -> Result<Vec<ContentSearchResult>> {
+async fn search_anime(query: &str) -> Result<Vec<Content>> {
     let url = format!("https://api.jikan.moe/v4/anime?q={}", query);
     let resp = reqwest::get(&url).await?.json::<JikanResponse>().await?;
 
     Ok(resp
         .data
         .into_iter()
-        .map(|anime| ContentSearchResult::from((anime, ContentType::Anime)))
+        .map(|anime| Content::from((anime, ContentType::Anime)))
         .collect())
 }
 
-async fn search_vn(query: &str) -> Result<Vec<ContentSearchResult>> {
+async fn search_vn(query: &str) -> Result<Vec<Content>> {
     let filters = vec!["search", "=", query];
-    let fields = "title, image.url, description";
+    let fields = "title, image.url, description, alttitle, released, length_minutes, length_votes, rating, votecount";
 
     let payload = serde_json::json!({
         "filters": filters,
@@ -50,7 +50,7 @@ async fn search_vn(query: &str) -> Result<Vec<ContentSearchResult>> {
     Ok(resp
         .results
         .into_iter()
-        .map(|vn| ContentSearchResult::from((vn, ContentType::Vn)))
+        .map(|vn| Content::from((vn, ContentType::Vn)))
         .collect())
 }
 
