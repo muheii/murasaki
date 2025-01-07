@@ -4,5 +4,4 @@
 
 </script>
 
-<h1>VN</h1>
 <Library contentType={ContentType.Vn}></Library>

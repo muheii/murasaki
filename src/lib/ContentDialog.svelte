@@ -6,7 +6,7 @@
 	import { Button, buttonVariants } from './components/ui/button';
 	import { Input } from './components/ui/input';
 
-    export let item: Content;
+    let { item }: { item: Content } = $props();
 
 </script>
 

@@ -4,8 +4,8 @@
 	import { Button } from "$lib/components/ui/button";
 	import { onMount } from "svelte";
 
-    export let anime: Content;
-    let episodes: Episode[] = [];
+    let { anime }: { anime: Content } = $props();
+    let episodes: Episode[] = $state([]);
 
     async function loadEpisodes() {
         try {

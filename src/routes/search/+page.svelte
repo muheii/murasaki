@@ -1,10 +1,10 @@
 <script lang="ts">
     import { invoke } from '@tauri-apps/api/core';
-    import { ContentType, type Content } from '../types/content';
-	import { Input } from './components/ui/input';
-	import { Button } from './components/ui/button';
+    import { ContentType, type Content } from '../../types/content';
+	import { Input } from '../../lib/components/ui/input';
+	import { Button } from '../../lib/components/ui/button';
 
-    let searchResults: Content[] = [];
+    let searchResults: Content[] = $state([]);
     let query = '';
 
     async function search(contentType: ContentType) {

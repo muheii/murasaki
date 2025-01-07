@@ -4,5 +4,4 @@
 
 </script>
 
-<h1>Anime</h1>
 <Library contentType={ContentType.Anime}></Library>

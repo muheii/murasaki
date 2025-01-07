@@ -5,7 +5,7 @@
     import { open } from "@tauri-apps/plugin-dialog";
 	import type { Content } from "../../types/content";
 
-    export let vn: Content;
+    let { vn }: { vn: Content } = $props();
 
     async function selectPath() {
         const file = await open({

@@ -5,8 +5,8 @@
 	import { Button } from './components/ui/button';
 	import ContentDialog from './ContentDialog.svelte';
 
-    export let contentType: ContentType;
-    let items: Content[] = [];
+    let { contentType }: { contentType: ContentType } = $props();
+    let items: Content[] = $state([]);
 
     async function loadLibrary() {
         try {
