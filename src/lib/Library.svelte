@@ -24,7 +24,7 @@
 <div class="light w-full">
     <table class="w-full">
         <thead>
-            <tr class="border-b border-zinc-700">
+            <tr class="border-b border-border">
                 <th class="w-16"></th>
                 <th class="text-left">Title</th>
                 <th class="text-left">Time Immersed</th>
@@ -33,7 +33,7 @@
         </thead>
         <tbody>
             {#each items as item}
-                <tr class="border-b border-zinc-700/50 hover:bg-zinc-800/50">
+                <tr class="border-b border-border/50 hover:bg-accent/50">
                     <td class="py-2 px-4">
                         <img src={item.image_path} alt={item.title} class="w-12 h-12 object-cover"/>
                     </td>

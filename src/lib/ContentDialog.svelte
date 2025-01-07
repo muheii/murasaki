@@ -3,8 +3,7 @@
 	import AnimeControls from '../routes/anime/AnimeControls.svelte';
 	import VnControls from '../routes/vn/VnControls.svelte';
 	import { ContentType, type Content } from '../types/content';
-	import { Button, buttonVariants } from './components/ui/button';
-	import { Input } from './components/ui/input';
+	import { buttonVariants } from './components/ui/button';
 
     let { item }: { item: Content } = $props();
 

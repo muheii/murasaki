@@ -1,7 +1,7 @@
 <script lang="ts">
     import { invoke } from '@tauri-apps/api/core';
     import { onMount } from 'svelte';
-    import type { Config } from '../types/config';
+    import type { Config } from '../../types/config';
 
     let config: Config;
 
