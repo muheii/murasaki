@@ -40,9 +40,6 @@
                     <td class="py-2 px-4">{item.title}</td>
                     <td class="py-2 px-4">0</td>
                     <td class="py-2 px-4">
-                        <!-- <Button variant="default" class="w-full" onclick={() => launchVn(item)}>
-                            Launch
-                        </Button> -->
                         <ContentDialog item={item}></ContentDialog>
                     </td>
                 </tr>

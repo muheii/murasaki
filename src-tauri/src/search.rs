@@ -55,8 +55,6 @@ async fn search_vn(query: &str) -> Result<Vec<Content>> {
 }
 
 pub fn scan_anime_episodes(content_id: &str, path: &str) -> Result<Vec<Episode>> {
-    println!("Starting episode scan in directory: {}", path);
-
     let standard_pattern =
         Regex::new(r"(?i)(?:e|episode|\s-\s)?\s*?(\d{1,3})(?:v\d)?(?:\s*?|$|\[|\.)").unwrap();
     // For cases like Serial Experiments Lain - S01E01.mkv
@@ -68,19 +66,11 @@ pub fn scan_anime_episodes(content_id: &str, path: &str) -> Result<Vec<Episode>>
             let path = entry.path();
             let filename = path.file_name()?.to_string_lossy();
 
-            if let Some(caps) = standard_pattern.captures(&filename) {
-                println!("Capture groups: {:?}", caps);
-                for i in 0..caps.len() {
-                    println!("Group {}: {:?}", i, caps.get(i).map(|m| m.as_str()));
-                }
-            }
-
             // Prevent extras from being parsed
             if filename.to_lowercase().contains("special")
                 || filename.to_lowercase().contains("nced")
                 || filename.to_lowercase().contains("ncop")
             {
-                println!("Skipping extra: {}", filename);
                 return None;
             }
 
@@ -88,7 +78,6 @@ pub fn scan_anime_episodes(content_id: &str, path: &str) -> Result<Vec<Episode>>
             if !filename.to_lowercase().ends_with(".mkv")
                 && !filename.to_lowercase().ends_with(".mp4")
             {
-                println!("Skipping non-video: {}", filename);
                 return None;
             }
 

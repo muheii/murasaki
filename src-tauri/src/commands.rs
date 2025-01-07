@@ -46,8 +46,12 @@ pub async fn save_config(config: Config) -> TAResult<()> {
 }
 
 #[tauri::command]
-pub async fn launch_content(db: State<'_, Database>, content: Content) -> TAResult<()> {
-    let user_activity = content.content_type.launch(&content).await?;
+pub async fn launch_content(
+    db: State<'_, Database>,
+    content: Content,
+    episode: Option<Episode>,
+) -> TAResult<()> {
+    let user_activity = content.content_type.launch(&content, episode).await?;
     db.write_user_activity(&user_activity)?;
     Ok(())
 }

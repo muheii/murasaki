@@ -19,7 +19,7 @@
 
     async function launchVn(content: Content) {
         try {
-            await invoke('launch_content', { content });
+            await invoke('launch_content', { content, episode: null });
         } catch (error) {
             console.error('Failed to launch VN:', error);
         }

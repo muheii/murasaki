@@ -3,11 +3,16 @@ use chrono::Local;
 use std::time::Instant;
 use std::{os::windows::process::CommandExt, process::Command};
 
+use crate::config::Config;
 use crate::types::common::{Content, ContentType};
-use crate::types::database::UserActivity;
+use crate::types::database::{Episode, UserActivity};
 
 impl ContentType {
-    pub async fn launch(&self, storage_item: &Content) -> Result<UserActivity> {
+    pub async fn launch(
+        &self,
+        storage_item: &Content,
+        episode: Option<Episode>,
+    ) -> Result<UserActivity> {
         let start_instant = Instant::now();
 
         let mut user_activity = UserActivity {
@@ -25,7 +30,10 @@ impl ContentType {
                 user_activity.minutes_read = start_instant.elapsed().as_secs();
             }
             ContentType::Anime => {
-                // Placeholder for launching anime
+                if let Some(ep) = episode {
+                    launch_anime(&ep).await?;
+                }
+                user_activity.minutes_watched = start_instant.elapsed().as_secs();
             }
         }
 
@@ -47,6 +55,25 @@ async fn launch_vn(storage_item: &Content) -> Result<()> {
 
     // Change the working directory to avoid errors from the VN
     command.current_dir(working_dir);
+
+    #[cfg(target_os = "windows")]
+    command.creation_flags(winapi::um::winbase::DETACHED_PROCESS);
+
+    if let Ok(mut child) = command.spawn() {
+        child.wait()?;
+    }
+
+    Ok(())
+}
+
+async fn launch_anime(episode: &Episode) -> Result<()> {
+    let config = Config::load()?;
+
+    let mut command = Command::new(&config.player.executable);
+
+    command.args(&config.player.args);
+
+    command.arg(&episode.path);
 
     #[cfg(target_os = "windows")]
     command.creation_flags(winapi::um::winbase::DETACHED_PROCESS);
