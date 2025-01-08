@@ -54,7 +54,7 @@
                         <p class="text-sm text-muted-foreground">{item.description || 'No description available.'}</p>
                     </div>
                 </div>
-                <div class="flex-none pt-6 border-t border-border">
+                <div class="flex-none pt-4 border-t border-border">
                     {#if item.content_type === ContentType.Anime}
                         <div class="max-h-32 overflow-y-auto">
                             <AnimeControls anime={item}></AnimeControls>

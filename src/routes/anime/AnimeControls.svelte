@@ -26,6 +26,8 @@
     onMount(loadEpisodes);
 </script>
 
-{#each episodes as episode}
-<Button onclick={() => launchAnime(anime, episode)}>{episode.episode_number}</Button>
-{/each}
+<div class="grid grid-cols-8 gap-2">
+    {#each episodes as episode}
+        <Button variant="secondary" class="w-full flex items-center font-medium" onclick={() => launchAnime(anime, episode)}>{episode.episode_number}</Button>
+    {/each}
+</div>
