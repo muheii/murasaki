@@ -45,8 +45,6 @@
     $effect(() => {
         loadLibrary();
     })
-
-    onMount(loadLibrary);
 </script>
 
 <div class="flex flex-col gap-y-4">
