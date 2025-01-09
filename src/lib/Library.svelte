@@ -1,12 +1,12 @@
 <script lang="ts">
     import { invoke } from '@tauri-apps/api/core';
-    import { ContentType, type Content } from '../types/content';
+    import { ContentType, type Content, type ContentWithStats } from '../types/content';
 	import { onMount } from 'svelte';
 	import { Button } from './components/ui/button';
 	import ContentDialog from './ContentDialog.svelte';
 
     let { contentType }: { contentType: ContentType } = $props();
-    let items: Content[] = $state([]);
+    let items: ContentWithStats[] = $state([]);
 
     async function loadLibrary() {
         try {
@@ -18,6 +18,29 @@
         }
     }
 
+    function formatMinutes(minutes: number): string {
+        const hours = Math.floor(minutes / 60);
+        const remainingMinutes = minutes % 60;
+        return hours > 0
+            ? `${hours}h ${remainingMinutes}m`
+            : `${remainingMinutes}m`;
+    }
+
+    // last_active is optional because the user may have never opened the content
+    function formatDate(dateStr: string | undefined): string {
+        if(!dateStr) return 'Never';
+        const date = new Date(dateStr);
+        const now = new Date();
+        // getTime() returns the time in milliseconds
+        const diff = now.getTime() - date.getTime();
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+
+        if (days === 0) return 'Today';
+        if (days === 1) return 'Yesterday';
+        if (days < 7) return `${days} days ago`;
+        return date.toLocaleDateString();
+    }
+
     onMount(loadLibrary);
 </script>
 
@@ -27,6 +50,7 @@
             <tr class="border-b border-border">
                 <th class="w-16"></th>
                 <th class="text-left">Title</th>
+                <th class="text-left">Last Active</th>
                 <th class="text-left">Time Immersed</th>
                 <th class="w-16"></th>
             </tr>
@@ -35,12 +59,13 @@
             {#each items as item}
                 <tr class="border-b border-border/50 hover:bg-accent/50">
                     <td class="py-2 px-4">
-                        <img src={item.image_path} alt={item.title} class="w-12 h-12 object-cover"/>
+                        <img src={item.content.image_path} alt={item.content.title} class="w-12 h-12 object-cover"/>
                     </td>
-                    <td class="py-2 px-4">{item.title}</td>
-                    <td class="py-2 px-4">0</td>
+                    <td class="py-2 px-4">{item.content.title}</td>
+                    <td class="py-2 px-4">{formatDate(item.last_active)}</td>
+                    <td class="py-2 px-4">{formatMinutes(item.total_minutes)}</td>
                     <td class="py-2 px-4">
-                        <ContentDialog item={item}></ContentDialog>
+                        <ContentDialog item={item.content}></ContentDialog>
                     </td>
                 </tr>
             {/each}

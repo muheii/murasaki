@@ -19,6 +19,12 @@ export interface Content {
     votecount?: number;
 }
 
+export interface ContentWithStats {
+    content: Content;
+    last_active?: string;
+    total_minutes: number;
+}
+
 export interface Episode {
     external_id: string;
     episode_number: number;

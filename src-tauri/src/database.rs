@@ -5,7 +5,7 @@ use std::{fs::create_dir_all, path::PathBuf, sync::RwLock};
 
 use crate::types::{
     common::{Content, ContentType},
-    database::{Episode, UserActivity},
+    database::{ContentWithStats, Episode, UserActivity},
 };
 
 #[derive(Debug)]
@@ -141,6 +141,52 @@ impl Database {
         Ok(items)
     }
 
+    pub fn read_content_with_stats(
+        &self,
+        content_type: ContentType,
+    ) -> Result<Vec<ContentWithStats>> {
+        let conn = self
+            .conn
+            .read()
+            .map_err(|e| anyhow::Error::msg(e.to_string()))?;
+
+        let mut stmt = conn.prepare(
+            "SELECT
+                c.*,
+                MAX(ua.date) as last_active,
+                SUM(COALESCE(ua.minutes_watched, 0) + COALESCE(ua.minutes_read, 0)) as total_minutes
+            FROM content c
+            LEFT JOIN user_activity ua ON c.id = ua.content_id
+            WHERE c.content_type = ?1
+            GROUP BY c.id",
+        )?;
+
+        let items = stmt.query_map([format!("{:?}", content_type)], |row| {
+            Ok(ContentWithStats {
+                content: Content {
+                    id: row.get(0)?,
+                    external_id: row.get(1)?,
+                    content_type: content_type.clone(),
+                    title: row.get(3)?,
+                    title_japanese: row.get(4)?,
+                    description: row.get(5)?,
+                    file_path: row.get(6)?,
+                    image_path: row.get(7)?,
+                    release_date: row.get(8)?,
+                    episodes: row.get(9)?,
+                    length_minutes: row.get(10)?,
+                    length_votes: row.get(11)?,
+                    rating: row.get(12)?,
+                    votecount: row.get(13)?,
+                },
+                last_active: row.get(14)?,
+                total_minutes: row.get(15)?,
+            })
+        })?;
+
+        Ok(items.collect::<SqliteResult<Vec<_>>>()?)
+    }
+
     pub fn write_user_activity(&self, activity: &UserActivity) -> Result<()> {
         let conn = self
             .conn
@@ -173,7 +219,7 @@ impl Database {
     pub fn read_episodes(&self, external_id: &str) -> Result<Vec<Episode>> {
         let conn = self
             .conn
-            .write()
+            .read()
             .map_err(|e| anyhow::Error::msg(e.to_string()))?;
 
         let mut stmt = conn.prepare(

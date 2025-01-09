@@ -5,7 +5,7 @@
   import "../app.css";
 </script>
 
-<div class="h-[720px] w-[1280px] flex bg-background text-foreground">
+<div class="h-[720px] w-[1280px] flex dark bg-background text-foreground">
   <nav class="w-16 h-full flex flex-col bg-muted border-r border-border">
     <a href="/" class="h-16 flex items-center justify-center hover:bg-accent"><House></House></a>
     <a href="/anime" class="h-16 flex items-center justify-center hover:bg-accent"><SquareLibrary></SquareLibrary></a>

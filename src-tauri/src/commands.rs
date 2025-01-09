@@ -2,7 +2,7 @@ use crate::config::Config;
 use crate::database::Database;
 use crate::search::scan_anime_episodes;
 use crate::types::common::{Content, ContentType};
-use crate::types::database::Episode;
+use crate::types::database::{ContentWithStats, Episode};
 use anyhow_tauri::TAResult;
 use tauri::State;
 
@@ -31,8 +31,8 @@ pub async fn add_to_library(db: State<'_, Database>, search_result: Content) -> 
 pub async fn get_from_library(
     db: State<'_, Database>,
     content_type: ContentType,
-) -> TAResult<Vec<Content>> {
-    Ok(db.read_items(content_type)?)
+) -> TAResult<Vec<ContentWithStats>> {
+    Ok(db.read_content_with_stats(content_type)?)
 }
 
 #[tauri::command]

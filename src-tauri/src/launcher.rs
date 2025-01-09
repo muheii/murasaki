@@ -10,7 +10,7 @@ use crate::types::database::{Episode, UserActivity};
 impl ContentType {
     pub async fn launch(
         &self,
-        storage_item: &Content,
+        content: &Content,
         episode: Option<Episode>,
     ) -> Result<UserActivity> {
         let start_instant = Instant::now();
@@ -21,19 +21,19 @@ impl ContentType {
             minutes_watched: 0,
             minutes_read: 0,
             characters_read: 0,
-            content_id: storage_item.id,
+            content_id: content.id,
         };
 
         match self {
             ContentType::Vn => {
-                launch_vn(storage_item).await?;
-                user_activity.minutes_read = start_instant.elapsed().as_secs();
+                launch_vn(content).await?;
+                user_activity.minutes_read = start_instant.elapsed().as_secs() / 60;
             }
             ContentType::Anime => {
                 if let Some(ep) = episode {
                     launch_anime(&ep).await?;
                 }
-                user_activity.minutes_watched = start_instant.elapsed().as_secs();
+                user_activity.minutes_watched = start_instant.elapsed().as_secs() / 60;
             }
         }
 
@@ -41,8 +41,8 @@ impl ContentType {
     }
 }
 
-async fn launch_vn(storage_item: &Content) -> Result<()> {
-    let file_path = storage_item
+async fn launch_vn(vn: &Content) -> Result<()> {
+    let file_path = vn
         .file_path
         .as_ref()
         .ok_or_else(|| anyhow::anyhow!("File path is None"))?;
@@ -59,9 +59,8 @@ async fn launch_vn(storage_item: &Content) -> Result<()> {
     #[cfg(target_os = "windows")]
     command.creation_flags(winapi::um::winbase::DETACHED_PROCESS);
 
-    if let Ok(mut child) = command.spawn() {
-        child.wait()?;
-    }
+    let mut child = command.spawn()?;
+    child.wait()?;
 
     Ok(())
 }
@@ -78,9 +77,8 @@ async fn launch_anime(episode: &Episode) -> Result<()> {
     #[cfg(target_os = "windows")]
     command.creation_flags(winapi::um::winbase::DETACHED_PROCESS);
 
-    if let Ok(mut child) = command.spawn() {
-        child.wait()?;
-    }
+    let mut child = command.spawn()?;
+    child.wait()?;
 
     Ok(())
 }
