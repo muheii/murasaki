@@ -1,9 +1,11 @@
 <script lang="ts">
     import { invoke } from '@tauri-apps/api/core';
     import { ContentType, type Content } from '../../types/content';
-	import { Input } from '../../lib/components/ui/input';
-	import { Button } from '../../lib/components/ui/button';
 	import SearchBar from '$lib/SearchBar.svelte';
+	import { Input } from '$lib/components/ui/input';
+	import { Button } from '$lib/components/ui/button';
+    import { Toaster } from '$lib/components/ui/sonner';
+	import { toast } from 'svelte-sonner';
 
     let searchResults: Content[] = $state([]);
     let query = $state('');
@@ -12,6 +14,9 @@
     async function addToLibrary(result: Content) {
         try {
             await invoke('add_to_library', { searchResult: result });
+            toast.success("Added to library!", {
+                description: `${result.title} was added to your library.`
+            });
         } catch(error) {
             console.error('Failed to add to library:', error);
         }
@@ -30,7 +35,6 @@
         if (!q) return;
 
         try {
-            console.log('calling backend');
             searchResults = await invoke('search_content', {
                 contentType: type,
                 query: q
@@ -45,7 +49,7 @@
     })
 </script>
 
-<div class="flex flex-col gap-4">
+<div class="flex flex-col gap-y-4">
     <SearchBar bind:query={query} bind:contentType={contentType}></SearchBar>
 
     <div class="w-full">
@@ -78,3 +82,5 @@
         </table>
     </div>
 </div>
+
+<Toaster />

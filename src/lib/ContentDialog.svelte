@@ -1,7 +1,7 @@
 <script lang="ts">
     import * as Dialog from '$lib/components/ui/dialog/index.js';
-	import AnimeControls from '../routes/anime/AnimeControls.svelte';
-	import VnControls from '../routes/vn/VnControls.svelte';
+	import AnimeControls from '../routes/library/AnimeControls.svelte';
+	import VnControls from '../routes/library/VnControls.svelte';
 	import { ContentType, type Content } from '../types/content';
 	import { buttonVariants } from './components/ui/button';
     import { Badge, badgeVariants } from '$lib/components/ui/badge/index.js';

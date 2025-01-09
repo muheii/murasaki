@@ -103,43 +103,43 @@ impl Database {
         Ok(())
     }
 
-    pub fn read_items(&self, content_type: ContentType) -> Result<Vec<Content>> {
-        let conn = self
-            .conn
-            .read()
-            .map_err(|e| anyhow::Error::msg(e.to_string()))?;
+    // pub fn read_items(&self, content_type: ContentType) -> Result<Vec<Content>> {
+    //     let conn = self
+    //         .conn
+    //         .read()
+    //         .map_err(|e| anyhow::Error::msg(e.to_string()))?;
 
-        let mut stmt = conn.prepare(
-            "SELECT id, external_id, content_type, title, title_japanese,
-                description, file_path, image_path, release_date,
-                episodes, length_minutes, length_votes, rating, votecount
-            FROM content 
-            WHERE content_type = ?1",
-        )?;
+    //     let mut stmt = conn.prepare(
+    //         "SELECT id, external_id, content_type, title, title_japanese,
+    //             description, file_path, image_path, release_date,
+    //             episodes, length_minutes, length_votes, rating, votecount
+    //         FROM content
+    //         WHERE content_type = ?1",
+    //     )?;
 
-        let items = stmt.query_map([format!("{:?}", content_type)], |row| {
-            Ok(Content {
-                id: row.get(0)?,
-                external_id: row.get(1)?,
-                content_type: content_type.clone(),
-                title: row.get(3)?,
-                title_japanese: row.get(4)?,
-                description: row.get(5)?,
-                file_path: row.get(6)?,
-                image_path: row.get(7)?,
-                release_date: row.get(8)?,
-                episodes: row.get(9)?,
-                length_minutes: row.get(10)?,
-                length_votes: row.get(11)?,
-                rating: row.get(12)?,
-                votecount: row.get(13)?,
-            })
-        })?;
+    //     let items = stmt.query_map([format!("{:?}", content_type)], |row| {
+    //         Ok(Content {
+    //             id: row.get(0)?,
+    //             external_id: row.get(1)?,
+    //             content_type: content_type.clone(),
+    //             title: row.get(3)?,
+    //             title_japanese: row.get(4)?,
+    //             description: row.get(5)?,
+    //             file_path: row.get(6)?,
+    //             image_path: row.get(7)?,
+    //             release_date: row.get(8)?,
+    //             episodes: row.get(9)?,
+    //             length_minutes: row.get(10)?,
+    //             length_votes: row.get(11)?,
+    //             rating: row.get(12)?,
+    //             votecount: row.get(13)?,
+    //         })
+    //     })?;
 
-        let items = items.collect::<SqliteResult<Vec<Content>>>()?;
+    //     let items = items.collect::<SqliteResult<Vec<Content>>>()?;
 
-        Ok(items)
-    }
+    //     Ok(items)
+    // }
 
     pub fn read_content_with_stats(
         &self,
