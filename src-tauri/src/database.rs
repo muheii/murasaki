@@ -310,6 +310,17 @@ impl Database {
             daily_activity,
         })
     }
+
+    pub fn delete_item(&self, content_id: u64) -> Result<()> {
+        let conn = self
+            .conn
+            .write()
+            .map_err(|e| anyhow::Error::msg(e.to_string()))?;
+
+        conn.execute("DELETE FROM content WHERE external_id = ?1", (content_id,))?;
+
+        Ok(())
+    }
 }
 
 fn get_database_path() -> Result<PathBuf> {

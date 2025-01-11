@@ -70,3 +70,8 @@ pub async fn get_activity_stats(
 ) -> TAResult<ActivityStats> {
     Ok(db.get_activity_stats(start_date, end_date)?)
 }
+
+#[tauri::command]
+pub async fn delete_item(db: State<'_, Database>, content_id: u64) -> TAResult<()> {
+    Ok(db.delete_item(content_id)?)
+}

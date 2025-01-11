@@ -25,6 +25,7 @@ fn main() {
             commands::launch_content,
             commands::get_episodes,
             commands::get_activity_stats,
+            commands::delete_item,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

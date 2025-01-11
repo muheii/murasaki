@@ -2,10 +2,10 @@
     import { invoke } from '@tauri-apps/api/core';
     import { ContentType, type Content, type ContentWithStats } from '../../types/content';
 	import { onMount } from 'svelte';
-	import { Button } from '../../lib/components/ui/button';
 	import ContentDialog from '../../lib/ContentDialog.svelte';
     import { libraryState } from './Library.svelte.js';
 	import SearchBar from '../../lib/SearchBar.svelte';
+	import Dropdown from './Dropdown.svelte';
 
     let items: ContentWithStats[] = $state([]);
 
@@ -63,7 +63,7 @@
             </thead>
             <tbody>
                 {#each items as item}
-                    <tr class="border-b border-border/50 hover:bg-accent/50">
+                    <tr class="border-b border-border/50 hover:bg-accent/50 group">
                         <td class="py-2 px-4">
                             <img src={item.content.image_path} alt={item.content.title} class="w-12 h-12 object-cover"/>
                         </td>
@@ -71,7 +71,10 @@
                         <td class="py-2 px-4">{formatDate(item.last_active)}</td>
                         <td class="py-2 px-4">{formatMinutes(item.total_minutes)}</td>
                         <td class="py-2 px-4">
-                            <ContentDialog item={item.content}></ContentDialog>
+                            <div class="flex gap-x-4">
+                                <Dropdown contentId={parseInt(item.content.external_id)}></Dropdown>
+                                <ContentDialog item={item.content}></ContentDialog>
+                            </div>
                         </td>
                     </tr>
                 {/each}
