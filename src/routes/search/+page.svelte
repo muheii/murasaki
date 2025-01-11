@@ -47,7 +47,7 @@
             } finally {
                 isLoading = false;
             }
-        }, 500);
+        }, 300);
     }
 
     // Could consider engineering a better solution than just an effect

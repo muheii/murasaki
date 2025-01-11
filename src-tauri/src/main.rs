@@ -24,6 +24,7 @@ fn main() {
             commands::save_config,
             commands::launch_content,
             commands::get_episodes,
+            commands::get_activity_stats,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

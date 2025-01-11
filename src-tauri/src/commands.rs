@@ -3,6 +3,7 @@ use crate::database::Database;
 use crate::search::scan_anime_episodes;
 use crate::types::common::{Content, ContentType};
 use crate::types::database::{ContentWithStats, Episode};
+use crate::types::stats::ActivityStats;
 use anyhow_tauri::TAResult;
 use tauri::State;
 
@@ -59,4 +60,13 @@ pub async fn launch_content(
 #[tauri::command]
 pub async fn get_episodes(db: State<'_, Database>, external_id: &str) -> TAResult<Vec<Episode>> {
     Ok(db.read_episodes(external_id)?)
+}
+
+#[tauri::command]
+pub async fn get_activity_stats(
+    db: State<'_, Database>,
+    start_date: &str,
+    end_date: &str,
+) -> TAResult<ActivityStats> {
+    Ok(db.get_activity_stats(start_date, end_date)?)
 }

@@ -20,10 +20,7 @@
                     <div class="h-4 bg-muted animate-pulse rounded w-full"></div>
                 </td>
                 <td class="py-2 px-4">
-                    <div class="space-y-2">
-                        <div class="h-9 bg-muted animate-pulse rounded w-full"></div>
-                        <div class="h-9 bg-muted animate-pulse rounded w-full"></div>
-                    </div>
+                    <div class="h-9 bg-muted animate-pulse rounded w-full"></div>
                 </td>
             </tr>
         {/each}
