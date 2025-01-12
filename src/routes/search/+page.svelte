@@ -16,7 +16,7 @@
 
     async function addToLibrary(result: Content) {
         try {
-            await invoke('add_to_library', { searchResult: result });
+            await invoke('add_to_library', { content: result });
             toast.success("Added to library!", {
                 description: `${result.title} was added to your library.`
             });

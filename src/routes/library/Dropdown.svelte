@@ -12,7 +12,7 @@
 
     async function deleteItem() {
         try {
-            await invoke('delete_item', { contentId });
+            await invoke('delete_content', { contentId });
             open = false;
         } catch (error) {
             console.error(error);

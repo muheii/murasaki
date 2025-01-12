@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-use super::common::{Content, ContentType};
+use crate::common::types::{Content, ContentType};
 
 #[derive(Deserialize, Debug)]
 pub struct JikanResponse {

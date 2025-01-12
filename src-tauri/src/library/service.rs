@@ -1,58 +1,8 @@
-use crate::types::{
-    api::{JikanResponse, VndbResponse},
-    common::{Content, ContentType},
-    database::Episode,
-};
-
 use anyhow::Result;
 use regex::Regex;
 use std::fs;
 
-impl ContentType {
-    pub async fn search(&self, query: &str) -> Result<Vec<Content>> {
-        match self {
-            ContentType::Anime => Ok(search_anime(query).await?),
-            ContentType::Vn => Ok(search_vn(query).await?),
-        }
-    }
-}
-
-async fn search_anime(query: &str) -> Result<Vec<Content>> {
-    let url = format!("https://api.jikan.moe/v4/anime?q={}", query);
-    let resp = reqwest::get(&url).await?.json::<JikanResponse>().await?;
-
-    Ok(resp
-        .data
-        .into_iter()
-        .map(|anime| Content::from((anime, ContentType::Anime)))
-        .collect())
-}
-
-async fn search_vn(query: &str) -> Result<Vec<Content>> {
-    let filters = vec!["search", "=", query];
-    let fields = "title, image.url, description, alttitle, released, length_minutes, length_votes, rating, votecount";
-
-    let payload = serde_json::json!({
-        "filters": filters,
-        "fields": fields,
-    });
-
-    let client = reqwest::Client::new();
-    let resp = client
-        .post("https://api.vndb.org/kana/vn")
-        .header("Content-Type", "application/json")
-        .json(&payload)
-        .send()
-        .await?
-        .json::<VndbResponse>()
-        .await?;
-
-    Ok(resp
-        .results
-        .into_iter()
-        .map(|vn| Content::from((vn, ContentType::Vn)))
-        .collect())
-}
+use super::types::Episode;
 
 pub fn scan_anime_episodes(content_id: &str, path: &str) -> Result<Vec<Episode>> {
     let standard_pattern =

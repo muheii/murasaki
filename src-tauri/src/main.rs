@@ -1,14 +1,14 @@
 // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
-use database::Database;
-
-mod commands;
-mod config;
-mod database;
+mod common;
+mod dashboard;
 mod launcher;
+mod library;
 mod search;
-mod types;
+mod settings;
+
+use common::database::Database;
 
 fn main() {
     let db = Database::new().expect("Failed to initialize database");
@@ -17,16 +17,16 @@ fn main() {
         .plugin(tauri_plugin_dialog::init())
         .manage(db)
         .invoke_handler(tauri::generate_handler![
-            commands::search_content,
-            commands::add_to_library,
-            commands::get_from_library,
-            commands::load_config,
-            commands::save_config,
-            commands::launch_content,
-            commands::get_episodes,
-            commands::get_activity_stats,
-            commands::delete_item,
+            library::commands::add_to_library,
+            library::commands::get_library,
+            library::commands::delete_content,
+            library::commands::get_episodes,
+            search::commands::search_content,
+            launcher::commands::launch_content,
+            settings::commands::load_config,
+            settings::commands::save_config,
+            dashboard::commands::get_activity_stats,
         ])
         .run(tauri::generate_context!())
-        .expect("error while running tauri application");
+        .expect("Error while running tauri application");
 }

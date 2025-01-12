@@ -11,7 +11,7 @@
 
     async function loadLibrary() {
         try {
-            items = await invoke('get_from_library', {
+            items = await invoke('get_library', {
                 contentType: libraryState.contentType
             });
         } catch (error) {
