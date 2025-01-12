@@ -7,23 +7,13 @@
     import { Toaster } from '$lib/components/ui/sonner';
 	import { toast } from 'svelte-sonner';
 	import SearchSkeleton from './SearchSkeleton.svelte';
+	import ContentDialog from '$lib/ContentDialog.svelte';
 
     let searchResults: Content[] = $state([]);
     let query = $state('');
     let contentType = $state(ContentType.Anime);
     let isLoading = $state(false);
     let searchTimeout: ReturnType<typeof setTimeout>;
-
-    async function addToLibrary(result: Content) {
-        try {
-            await invoke('add_to_library', { content: result });
-            toast.success("Added to library!", {
-                description: `${result.title} was added to your library.`
-            });
-        } catch(error) {
-            console.error('Failed to add to library:', error);
-        }
-    }
     
     async function onQueryChange(currentQuery: string) {
         clearTimeout(searchTimeout);
@@ -81,10 +71,7 @@
                             <td class="py-2 px-4">{result.title}</td>
                             <td class="py-2 px-4 max-w-lg truncate">{result.description}</td>
                             <td class="py-2 px-4">
-                                <Input bind:value={result.file_path}></Input>
-                                <Button variant="secondary" class="w-full" onclick={() => addToLibrary(result)}>
-                                    Add to Library
-                                </Button>
+                                <ContentDialog content={result} mode='add'></ContentDialog>
                             </td>
                         </tr>
                     {/each}

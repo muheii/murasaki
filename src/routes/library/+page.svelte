@@ -6,6 +6,7 @@
     import { libraryState } from './Library.svelte.js';
 	import SearchBar from '../../lib/SearchBar.svelte';
 	import Dropdown from './Dropdown.svelte';
+	import ContentView from '$lib/ContentView.svelte';
 
     let items: ContentWithStats[] = $state([]);
 
@@ -49,8 +50,9 @@
 
 <div class="flex flex-col gap-y-4">
     <SearchBar bind:query={libraryState.query} bind:contentType={libraryState.contentType}></SearchBar>
+    <ContentView items={items}></ContentView>
 
-    <div class="w-full">
+    <!-- <div class="w-full">
         <table class="w-full">
             <thead>
                 <tr class="border-b border-border">
@@ -73,12 +75,12 @@
                         <td class="py-2 px-4">
                             <div class="flex gap-x-4">
                                 <Dropdown contentId={parseInt(item.content.external_id)}></Dropdown>
-                                <ContentDialog item={item.content}></ContentDialog>
+                                <ContentDialog content={item.content}></ContentDialog>
                             </div>
                         </td>
                     </tr>
                 {/each}
             </tbody>
         </table>
-    </div>
+    </div> -->
 </div>
