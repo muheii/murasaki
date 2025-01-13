@@ -8,7 +8,7 @@ use rusqlite::Result as SqliteResult;
 use super::types::ContentWithStats;
 
 impl Database {
-    pub fn write_item(&self, item: &Content) -> Result<()> {
+    pub fn write_item(&self, item: &Content) -> Result<i64> {
         let conn = self.write()?;
 
         conn.execute(
@@ -34,7 +34,7 @@ impl Database {
             ),
         )?;
 
-        Ok(())
+        Ok(conn.last_insert_rowid())
     }
 
     pub fn read_content_with_stats(

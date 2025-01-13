@@ -3,6 +3,7 @@
     import type { Content, ContentWithStats } from "../types/content";
 	import { Button } from "./components/ui/button";
 	import ContentDialog from "./ContentDialog.svelte";
+	import Dropdown from "../routes/library/Dropdown.svelte";
 
     type ViewMode = 'table' | 'grid';
     type SortField = 'title' | 'rating' | 'release_date';
@@ -104,7 +105,7 @@
                 </thead>
                 <tbody>
                     {#each sortedItems as item}
-                        <tr class="border-b border-border/50 hover:bg-accent/50">
+                        <tr class="border-b border-border/50 hover:bg-accent/50 group">
                             <td class="p-4">
                                 <img
                                     src={item.content.image_path}
@@ -116,7 +117,10 @@
                             <td class="p-4">{item.content.rating ?? 'N/A'}</td>
                             <td class="p-4">{item.content.release_date ?? 'N/A'}</td>
                             <td class="p-4">
-                                <ContentDialog content={item.content}/>
+                                <div class="flex gap-x-4">
+                                    <Dropdown contentId={parseInt(item.content.external_id)}></Dropdown>
+                                    <ContentDialog content={item.content}/>
+                                </div>
                             </td>
                         </tr>
                     {/each}

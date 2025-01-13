@@ -9,7 +9,7 @@
 
     async function loadEpisodes() {
         try {
-            episodes = await invoke('get_episodes', { externalId: anime.external_id });
+            episodes = await invoke('get_episodes', { contentId: anime.id });
         } catch (error) {
             console.error("Failed to get episodes: ", error);
         }

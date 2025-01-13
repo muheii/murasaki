@@ -15,6 +15,8 @@ impl Database {
         let db_path = get_database_path()?;
         let conn = Connection::open(db_path)?;
 
+        conn.execute("PRAGMA foreign_keys = ON", [])?;
+
         conn.execute(
             "CREATE TABLE IF NOT EXISTS content (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -44,7 +46,7 @@ impl Database {
                 minutes_watched INTEGER,
                 minutes_read INTEGER,
                 characters_read INTEGER,
-                FOREIGN KEY(content_id) REFERENCES content(id)
+                FOREIGN KEY(content_id) REFERENCES content(id) ON DELETE CASCADE
             )",
             [],
         )?;
@@ -52,10 +54,11 @@ impl Database {
         conn.execute(
             "CREATE TABLE IF NOT EXISTS episodes (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
-                content_id TEXT NOT NULL,
+                content_id INTEGER NOT NULL,
                 episode_number INTEGER NOT NULL,
                 path TEXT NOT NULL,
-                watched BOOL NOT NULL
+                watched BOOL NOT NULL,
+                FOREIGN KEY(content_id) REFERENCES content(id) ON DELETE CASCADE
             )",
             [],
         )?;

@@ -59,7 +59,16 @@ pub struct VnImage {
 impl From<(Anime, ContentType)> for Content {
     fn from((anime, content_type): (Anime, ContentType)) -> Self {
         let release_date = match (anime.season, anime.year) {
-            (Some(season), Some(year)) => Some(format!("{} {}", season, year)),
+            (Some(season), Some(year)) => {
+                let season = match season.as_str() {
+                    "winter" => "Winter",
+                    "spring" => "Spring",
+                    "summer" => "Summer",
+                    "fall" => "Fall",
+                    s => s,
+                };
+                Some(format!("{} {}", season, year))
+            }
             _ => None,
         };
 
@@ -94,7 +103,7 @@ impl From<(Vn, ContentType)> for Content {
             description: vn.description,
             episodes: None,
             release_date: vn.released,
-            rating: vn.rating,
+            rating: vn.rating.map(|r| r / 10.0), // Map to handle the Option
             votecount: vn.votecount,
             length_minutes: vn.length_minutes,
             length_votes: vn.length_votes,

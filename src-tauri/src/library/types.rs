@@ -12,7 +12,7 @@ pub struct ContentWithStats {
 #[derive(Debug, Deserialize, Serialize)]
 pub struct Episode {
     pub id: u64,
-    pub content_id: String,
+    pub content_id: i64,
     pub episode_number: u64,
     pub path: String,
     pub watched: bool,

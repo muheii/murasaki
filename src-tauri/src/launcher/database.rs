@@ -18,19 +18,19 @@ impl Database {
         Ok(())
     }
 
-    pub fn write_episodes(&self, episodes: &[Episode]) -> Result<()> {
+    pub fn write_episodes(&self, content_id: i64, episodes: &[Episode]) -> Result<()> {
         let conn = self.write()?;
 
         for episode in episodes {
             conn.execute("INSERT INTO episodes (content_id, episode_number, path, watched) VALUES (?1, ?2, ?3, ?4)",
-            (episode.content_id.clone(), episode.episode_number, episode.path.clone(), episode.watched),
+            (content_id, episode.episode_number, episode.path.clone(), episode.watched),
             )?;
         }
 
         Ok(())
     }
 
-    pub fn read_episodes(&self, external_id: &str) -> Result<Vec<Episode>> {
+    pub fn read_episodes(&self, content_id: i64) -> Result<Vec<Episode>> {
         let conn = self.read()?;
 
         let mut stmt = conn.prepare(
@@ -39,7 +39,7 @@ impl Database {
             WHERE content_id = ?1",
         )?;
 
-        let episodes = stmt.query_map([external_id], |row| {
+        let episodes = stmt.query_map([content_id], |row| {
             Ok(Episode {
                 id: row.get(0)?,
                 content_id: row.get(1)?,

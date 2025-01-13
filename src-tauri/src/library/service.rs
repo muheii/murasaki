@@ -4,7 +4,7 @@ use std::fs;
 
 use super::types::Episode;
 
-pub fn scan_anime_episodes(content_id: &str, path: &str) -> Result<Vec<Episode>> {
+pub fn scan_anime_episodes(path: &str) -> Result<Vec<Episode>> {
     let standard_pattern =
         Regex::new(r"(?i)(?:e|episode|\s-\s)?\s*?(\d{1,3})(?:v\d)?(?:\s*?|$|\[|\.)").unwrap();
     // For cases like Serial Experiments Lain - S01E01.mkv
@@ -51,7 +51,7 @@ pub fn scan_anime_episodes(content_id: &str, path: &str) -> Result<Vec<Episode>>
         .into_iter()
         .map(|(num, path)| Episode {
             id: 0,
-            content_id: content_id.to_string(),
+            content_id: 0,
             episode_number: num,
             path,
             watched: false,

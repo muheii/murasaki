@@ -13,13 +13,14 @@ use tauri::State;
 
 #[tauri::command]
 pub async fn add_to_library(db: State<'_, Database>, content: Content) -> TAResult<()> {
-    db.write_item(&content)?;
+    let content_id = db.write_item(&content)?;
+    print!("{}", content_id);
 
     if content.content_type == ContentType::Anime {
         if let Some(path) = &content.file_path {
-            match scan_anime_episodes(&content.external_id, path) {
+            match scan_anime_episodes(path) {
                 Ok(episodes) => {
-                    db.write_episodes(&episodes)?;
+                    db.write_episodes(content_id, &episodes)?;
                 }
                 Err(e) => println!("Failed to scan episodes: {}", e),
             }
@@ -38,8 +39,8 @@ pub async fn get_library(
 }
 
 #[tauri::command]
-pub async fn get_episodes(db: State<'_, Database>, external_id: &str) -> TAResult<Vec<Episode>> {
-    Ok(db.read_episodes(external_id)?)
+pub async fn get_episodes(db: State<'_, Database>, content_id: i64) -> TAResult<Vec<Episode>> {
+    Ok(db.read_episodes(content_id)?)
 }
 
 #[tauri::command]

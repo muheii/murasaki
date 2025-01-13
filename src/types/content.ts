@@ -4,6 +4,7 @@ export enum ContentType {
 }
 
 export interface Content {
+    id: number;
     external_id: string;
     content_type: ContentType;
     title: string;
