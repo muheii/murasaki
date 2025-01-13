@@ -41,7 +41,9 @@
             });
         } catch(error) {
             console.error('Failed to add to library:', error);
-            toast.error('Failed to add to library');
+            toast.error('Failed to add to library', {
+                description: String(error)
+            });
         }
     }
 </script>
