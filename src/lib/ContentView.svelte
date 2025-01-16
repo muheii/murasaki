@@ -6,14 +6,14 @@
 	import Dropdown from "../routes/library/Dropdown.svelte";
 
     type ViewMode = 'table' | 'grid';
-    type SortField = 'title' | 'rating' | 'release_date';
+    type SortField = 'title' | 'minutes' | 'lastActive';
     type SortDirection = 'asc' | 'desc';
 
     let { items }: { items: ContentWithStats[] } = $props();
 
     let viewMode = $state<ViewMode>('table');
-    let sortField = $state<SortField>('title');
-    let sortDirection = $state<SortDirection>('asc');
+    let sortField = $state<SortField>('lastActive');
+    let sortDirection = $state<SortDirection>('desc');
 
     let sortedItems = $derived([...items].sort((a, b) => {
         const direction = sortDirection === 'asc' ? 1 : -1;
@@ -21,18 +21,39 @@
         switch(sortField) {
             case 'title':
                 return direction * a.content.title.localeCompare(b.content.title);
-            case 'rating':
-                const ratingA = a.content.rating ?? 0;
-                const ratingB = b.content.rating ?? 0;
-                return direction * (ratingA - ratingB);
-            case 'release_date':
-                const dateA = a.content.release_date ?? '';
-                const dateB = b.content.release_date ?? '';
-                return direction * dateA.localeCompare(dateB);
+            case 'minutes':
+                return direction * (a.total_minutes - b.total_minutes);
+            case 'lastActive':
+                const dateA = a.last_active ? new Date(a.last_active).getTime() : 0;
+                const dateB = b.last_active ? new Date(b.last_active).getTime() : 0;
+                return direction * (dateA - dateB);
             default:
                 return 0;
         }
     })); 
+
+    // last_active is optional because the user may have never opened the content
+    function formatDate(dateStr: string | undefined): string {
+        if(!dateStr) return 'Never';
+        const date = new Date(dateStr);
+        const now = new Date();
+        // getTime() returns the time in milliseconds
+        const diff = now.getTime() - date.getTime();
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+
+        if (days === 0) return 'Today';
+        if (days === 1) return 'Yesterday';
+        if (days < 7) return `${days} days ago`;
+        return date.toLocaleDateString();
+    }
+
+    function formatMinutes(minutes: number) {
+        const hours = Math.floor(minutes / 60);
+        const remainingMinutes = minutes % 60;
+        return hours > 0
+            ? `${hours}h ${remainingMinutes}m`
+            : `${remainingMinutes}m`
+    }
 
     function toggleSort(field: SortField) {
         if(sortField === field) {
@@ -83,20 +104,20 @@
                         <th>
                             <Button
                                 variant="ghost"
-                                onclick={() => toggleSort('rating')}
+                                onclick={() => toggleSort('minutes')}
                                 class="flex items-center gap-1"
                             >
-                                Rating
+                                Time Immersed
                                 <ArrowUpDown class="h-4 w-4" />
                             </Button>
                         </th>
                         <th>
                             <Button
                                 variant="ghost"
-                                onclick={() => toggleSort('release_date')}
+                                onclick={() => toggleSort('lastActive')}
                                 class="flex items-center gap-1"
                             >
-                                Release Date
+                                Last Active
                                 <ArrowUpDown class="h-4 w-4" />
                             </Button>
                         </th>
@@ -114,8 +135,8 @@
                                 />
                             </td>
                             <td class="p-4">{item.content.title}</td>
-                            <td class="p-4">{item.content.rating ?? 'N/A'}</td>
-                            <td class="p-4">{item.content.release_date ?? 'N/A'}</td>
+                            <td class="p-4">{formatMinutes(item.total_minutes)}</td>
+                            <td class="p-4">{formatDate(item.last_active)}</td>
                             <td class="p-4">
                                 <div class="flex gap-x-4">
                                     <Dropdown contentId={parseInt(item.content.external_id)}></Dropdown>
@@ -138,11 +159,10 @@
                     />
                     <div class="flex flex-col gap-1">
                         <h3 class="font-medium line-clamp-2">{item.content.title}</h3>
-                        {#if item.content.rating}
-                            <p class="text-sm text-muted-foreground">
-                                Rating: {item.content.rating}/10
-                            </p>
-                        {/if}
+                        <div class="text-sm text-muted-foreground flex justify-between">
+                            <p>{formatMinutes(item.total_minutes)}</p>
+                            <p>{formatDate(item.last_active)}</p>
+                        </div>
                     </div>
                     <ContentDialog content={item.content}/>
                 </div>

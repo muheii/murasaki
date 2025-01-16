@@ -1,90 +1,99 @@
 <script lang="ts">
-    import { onMount } from 'svelte';
     import { invoke } from '@tauri-apps/api/core';
-    import { Card, CardContent, CardHeader, CardTitle } from '$lib/components/ui/card';
-    import { startOfYear, endOfYear, format } from 'date-fns';
-    
-    type ActivityStats = {
-        anime_minutes: number;
-        vn_minutes: number;
-        total_minutes: number;
-        active_days: number;
-        daily_activity: Array<{
-            date: string;
-            minutes: number;
-        }>;
-    }
+    import * as Card from '$lib/components/ui/card';
+    import type { ActivityStats } from '../types/stats';
+	import { Button } from './components/ui/button';
 
-    // Fallback if stats is undefined
-    let stats: ActivityStats = $state({
-        anime_minutes: 0,
-        vn_minutes: 0,
-        total_minutes: 0,
-        active_days: 0,
-        daily_activity: []
-    });
-    
+    type TimeRange = '1d' | '1m' | '1y';
+    let stats: ActivityStats | null = $state(null);
+    let selectedRange = $state<TimeRange>('1d');
+
     async function loadStats() {
-        // Currently loads stats for the year
-        const start = format(startOfYear(new Date()), 'yyyy-MM-dd');
-        const end = format(endOfYear(new Date()), 'yyyy-MM-dd');
+        const endDate = new Date().toISOString();
+        const startDate = new Date();
+
+        switch (selectedRange) {
+            case '1d':
+                startDate.setDate(startDate.getDate() - 1);
+                break;
+            case '1m':
+                startDate.setMonth(startDate.getMonth() - 1);
+                break;
+            case '1y':
+                startDate.setFullYear(startDate.getFullYear() - 1);
+                break;
+        }
         
         try {
             stats = await invoke('get_activity_stats', {
-                startDate: start,
-                endDate: end
+                startDate: startDate.toISOString(),
+                endDate
             });
         } catch (error) {
             console.error('Failed to load stats:', error);
         }
     }
 
-    function formatTime(minutes: number): string {
+    function formatHours(minutes: number): string {
         const hours = Math.floor(minutes / 60);
         const remainingMinutes = minutes % 60;
-        if (hours === 0) return `${remainingMinutes}m`;
-        return `${hours}h ${remainingMinutes}m`;
+        return hours > 0 
+            ? `${hours}h ${remainingMinutes}m` 
+            : `${remainingMinutes}m`;
     }
 
-    onMount(loadStats);
+    $effect(() => {
+        loadStats();
+    });
 </script>
 
-<div class="grid gap-4 grid-cols-2">
-    <Card>
-        <CardHeader>
-            <CardTitle>Total Time</CardTitle>
-        </CardHeader>
-        <CardContent>
-            <div class="text-2xl font-bold">{formatTime(stats?.total_minutes ?? 0)}</div>
-            <div class="text-xs text-muted-foreground">This year</div>
-        </CardContent>
-    </Card>
-
-    <Card>
-        <CardHeader>
-            <CardTitle>Active Days</CardTitle>
-        </CardHeader>
-        <CardContent>
-            <div class="text-2xl font-bold">{stats?.active_days ?? 0}</div>
-            <div class="text-xs text-muted-foreground">This year</div>
-        </CardContent>
-    </Card>
-
-    <Card class="col-span-2">
-        <CardHeader>
-            <CardTitle>Time Distribution</CardTitle>
-        </CardHeader>
-        <CardContent>
-            <div class="space-y-2">
-                <div class="flex justify-between items-center">
-                    <span>Anime</span>
-                    <span class="font-medium">{formatTime(stats?.anime_minutes ?? 0)}</span>
+<Card.Root class="w-[350px]">
+    <Card.Header>
+        <div class="flex justify-between items-center">
+            <Card.Title>Immersion Time</Card.Title>
+            <div class="flex gap-1">
+                <Button 
+                    variant={selectedRange === '1d' ? 'default' : 'outline'} 
+                    size="sm"
+                    onclick={() => selectedRange = '1d'}
+                >
+                    1D
+                </Button>
+                <Button 
+                    variant={selectedRange === '1m' ? 'default' : 'outline'} 
+                    size="sm"
+                    onclick={() => selectedRange = '1m'}
+                >
+                    1M
+                </Button>
+                <Button 
+                    variant={selectedRange === '1y' ? 'default' : 'outline'} 
+                    size="sm"
+                    onclick={() => selectedRange = '1y'}
+                >
+                    1Y
+                </Button>
+            </div>
+        </div>
+    </Card.Header>
+    <Card.Content>
+        {#if stats}
+            <div class="space-y-4">
+                <div class="grid grid-cols-2 gap-2">
+                    <div>
+                        <div class="text-sm font-medium text-muted-foreground">Anime</div>
+                        <div class="text-2xl font-bold">{formatHours(stats.anime_minutes)}</div>
+                    </div>
+                    <div>
+                        <div class="text-sm font-medium text-muted-foreground">Visual Novels</div>
+                        <div class="text-2xl font-bold">{formatHours(stats.vn_minutes)}</div>
+                    </div>
                 </div>
-                <div class="flex justify-between items-center">
-                    <span>Visual Novels</span>
-                    <span class="font-medium">{formatTime(stats?.vn_minutes ?? 0)}</span>
+                <div class="pt-2 border-t">
+                    <div class="text-sm font-medium text-muted-foreground">Total</div>
+                    <div class="text-2xl font-bold">{formatHours(stats.total_minutes)}</div>
                 </div>
             </div>
-        </CardContent>
-    </Card>
-</div>
+        {/if}
+    </Card.Content>
+</Card.Root>
