@@ -4,6 +4,7 @@ use serde::{Deserialize, Serialize};
 pub struct Config {
     pub player: PlayerConfig,
     pub interface: InterfaceConfig,
+    pub vn: VnConfig,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -17,6 +18,13 @@ pub struct InterfaceConfig {
     pub theme: String,
 }
 
+#[derive(Debug, Serialize, Deserialize)]
+pub struct VnConfig {
+    pub textractor_executable: String,
+    pub textractor_enabled: bool,
+    pub texthooker_enabled: bool,
+}
+
 impl Default for Config {
     fn default() -> Self {
         Self {
@@ -26,6 +34,11 @@ impl Default for Config {
             },
             interface: InterfaceConfig {
                 theme: "dark".to_string(),
+            },
+            vn: VnConfig {
+                textractor_executable: "".to_string(),
+                textractor_enabled: false,
+                texthooker_enabled: false,
             },
         }
     }

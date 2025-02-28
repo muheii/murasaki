@@ -38,6 +38,7 @@ pub async fn launch_content(content: &Content, episode: Option<Episode>) -> Resu
 }
 
 async fn launch_vn(vn: &Content) -> Result<()> {
+    let config = load_config()?;
     let file_path = vn
         .file_path
         .as_ref()
@@ -49,6 +50,19 @@ async fn launch_vn(vn: &Content) -> Result<()> {
 
     let mut command = Command::new(exe_path);
 
+    // Defining here allows us to kill on VN close
+    let mut textractor = Command::new(&config.vn.textractor_executable);
+    let mut textractor_child = None;
+
+    // Open textractor or texthooker if requested in settings
+    if config.vn.textractor_enabled {
+        textractor_child = Some(textractor.spawn()?);
+    }
+
+    if config.vn.texthooker_enabled {
+        open::that("https://anacreondjt.gitlab.io/texthooker.html");
+    }
+
     // Change the working directory to avoid errors from the VN
     command.current_dir(working_dir);
 
@@ -57,6 +71,11 @@ async fn launch_vn(vn: &Content) -> Result<()> {
 
     let mut child = command.spawn()?;
     child.wait()?;
+
+    // Kill Textractor process after VN closes
+    if let Some(mut textractor_child) = textractor_child {
+        textractor_child.kill()?;
+    }
 
     Ok(())
 }

@@ -9,6 +9,7 @@
 	import { setMode, toggleMode } from 'mode-watcher';
 	import Separator from '$lib/components/ui/separator/separator.svelte';
 	import { open } from '@tauri-apps/plugin-dialog';
+	import { Switch } from '$lib/components/ui/switch';
 
     let config: Config;
 
@@ -25,6 +26,22 @@
 
         if (selected) {
             config.player.executable = selected;
+        }
+    }
+
+    async function selectTextractorExecutable() {
+        if (!config) return;
+
+        const selected = await open({
+            multiple: false,
+            filters: [{
+                name: 'Executable',
+                extensions: ['exe']
+            }]
+        });
+
+        if (selected) {
+            config.vn.textractor_executable = selected;
         }
     }
 
@@ -63,12 +80,15 @@
 
         {#if config}
             <div class="flex flex-col gap-6">
+                <!-- Media Player Settings -->
                 <div class="space-y-4">
                     <div>
                         <h2 class="text-lg font-semibold">Media Player</h2>
                         <p class="text-sm text-muted-foreground">Configure media player settings for anime playback</p>
                     </div>
+
                     <Separator/>
+
                     <div class="flex flex-col gap-4">
                         <div class="grid w-full items-center gap-1.5">
                             <div class="flex gap-x-2">
@@ -84,8 +104,39 @@
                             <p class="text-sm text-muted-foreground">Command line arguments for the media player</p>
                         </div>
                     </div>
+
+                    <!-- VN Settings -->
+                    <div>
+                        <h2 class="text-lg font-semibold">VN Settings</h2>
+                        <p class="text-sm text-muted-foreground">Configure VN settings for VN reading</p>
+                    </div>
+
+                    <Separator />
+
+                    <div class="flex flex-col gap-4">
+                        <div class="grid w-full items-center gap-1.5">
+                            <div class="flex gap-x-2">
+                                <Input readonly bind:value={config.vn.textractor_executable} />
+                                <Button variant="outline" onclick={selectTextractorExecutable}>Browse</Button>
+                            </div>
+                            <p class="text-sm text-muted-foreground">Select your textractor exectuable</p>
+                        </div>
+
+                        <!-- Textractor toggle -->
+                        <div class="flex justify-between">
+                            <p class="text-muted-foreground">Open Textractor on launch</p>
+                            <Switch bind:checked={config.vn.textractor_enabled} />
+                        </div>
+
+                        <!-- Texthooker toggle -->
+                        <div class="flex justify-between">
+                            <p class="text-muted-foreground">Open Anacreon's texthooker on launch</p>
+                            <Switch bind:checked={config.vn.texthooker_enabled} />
+                        </div>
+                    </div>
                 </div>
             </div>
+
             <div class="flex justify-end gap-2">
                 <Button onclick={saveConfig}>Save Config</Button>
                 <Button onclick={toggleMode}>Toggle Theme</Button>
