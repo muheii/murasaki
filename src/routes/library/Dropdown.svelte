@@ -4,15 +4,15 @@
     import * as AlertDialog from '$lib/components/ui/alert-dialog/index.js';
 	import { Ellipsis, SquarePen, Trash2 } from 'lucide-svelte';
 	import { invoke } from '@tauri-apps/api/core';
+    import { deleteItem } from '$lib/stores/library-state.svelte';
 
     let { contentId }: { contentId: number } = $props();
 
-    // To control dialog state
     let open = $state(false);
 
-    async function deleteItem() {
+    async function handleDelete() {
         try {
-            await invoke('delete_content', { contentId });
+            await deleteItem(contentId);
             open = false;
         } catch (error) {
             console.error(error);
@@ -51,7 +51,7 @@
         </AlertDialog.Header>
         <AlertDialog.Footer>
             <AlertDialog.Cancel>Cancel</AlertDialog.Cancel>
-            <AlertDialog.Action onclick={deleteItem}>Delete</AlertDialog.Action>
+            <AlertDialog.Action onclick={handleDelete}>Delete</AlertDialog.Action>
         </AlertDialog.Footer>
     </AlertDialog.Content>
 </AlertDialog.Root>

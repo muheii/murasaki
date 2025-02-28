@@ -8,10 +8,12 @@
 </script>
 
 <div class="h-[720px] w-[1280px] flex bg-background text-foreground">
-  <nav class="w-16 h-full flex flex-col bg-muted border-r border-border">
-    <a href="/" class="nav-item {page.url.pathname === '/' ? 'active' : ''}"><House></House></a>
-    <a href="/library" class="nav-item {page.url.pathname === '/library' ? 'active' : ''}"><SquareLibrary class="opacity-100"></SquareLibrary></a>
-    <a href="/search" class="nav-item {page.url.pathname === '/search' ? 'active' : ''}"><Search></Search></a>
+  <nav class="w-16 h-full flex flex-col bg-muted border-r border-border justify-between">
+    <div>
+      <a href="/" class="nav-item {page.url.pathname === '/' ? 'active' : ''}"><House></House></a>
+      <a href="/library" class="nav-item {page.url.pathname === '/library' ? 'active' : ''}"><SquareLibrary class="opacity-100"></SquareLibrary></a>
+      <a href="/search" class="nav-item {page.url.pathname === '/search' ? 'active' : ''}"><Search></Search></a>
+    </div>
     <a href="/settings" class="nav-item {page.url.pathname === '/settings' ? 'active' : ''}"><Settings></Settings></a>
   </nav>
 

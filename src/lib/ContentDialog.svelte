@@ -7,9 +7,9 @@
     import { Badge, badgeVariants } from '$lib/components/ui/badge/index.js';
     import { Calendar, Star, SquareArrowOutUpRight } from 'lucide-svelte';
     import { open } from '@tauri-apps/plugin-dialog';
-	import { invoke } from '@tauri-apps/api/core';
     import { toast } from 'svelte-sonner';
 	import { Input } from './components/ui/input';
+	import { addToLibrary } from './stores/search-state.svelte';
 
     let { content, mode = 'view' }: { content: Content, mode?: 'view' | 'add' } = $props();
     let filePath = $state('');
@@ -32,10 +32,10 @@
         }
     }
 
-    async function addToLibrary() {
+    async function handleAddToLibrary() {
         try {
             content.file_path = filePath;
-            await invoke('add_to_library', { content });
+            await addToLibrary(content);
             toast.success('Added to library!', {
                 description: `${content.title} was added to your library.`
             });
@@ -103,7 +103,7 @@
                                 <Button variant="outline" onclick={selectPath}>Browse</Button>
                             </div>
 
-                            <Button onclick={addToLibrary} disabled={!filePath}>Add to Library</Button>
+                            <Button onclick={handleAddToLibrary} disabled={!filePath}>Add to Library</Button>
                         </div>
                     {:else}
                         {#if content.content_type === ContentType.Anime}
