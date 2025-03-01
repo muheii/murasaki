@@ -17,6 +17,7 @@
             placeholder={mode === 'search' ? "Search for content..." : "Filter library..."} 
             oninput={(e: Event) => {
                 const target = e.target as HTMLInputElement;
+
                 if (mode === 'search') {
                     searchState.query = target.value;
                 } else {

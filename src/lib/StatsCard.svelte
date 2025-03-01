@@ -47,53 +47,64 @@
     });
 </script>
 
-<Card.Root class="w-[350px]">
-    <Card.Header>
-        <div class="flex justify-between items-center">
-            <Card.Title>Immersion Time</Card.Title>
-            <div class="flex gap-1">
-                <Button 
-                    variant={selectedRange === '1d' ? 'default' : 'outline'} 
-                    size="sm"
-                    onclick={() => selectedRange = '1d'}
-                >
-                    1D
-                </Button>
-                <Button 
-                    variant={selectedRange === '1m' ? 'default' : 'outline'} 
-                    size="sm"
-                    onclick={() => selectedRange = '1m'}
-                >
-                    1M
-                </Button>
-                <Button 
-                    variant={selectedRange === '1y' ? 'default' : 'outline'} 
-                    size="sm"
-                    onclick={() => selectedRange = '1y'}
-                >
-                    1Y
-                </Button>
-            </div>
-        </div>
-    </Card.Header>
-    <Card.Content>
-        {#if stats}
-            <div class="space-y-4">
-                <div class="grid grid-cols-2 gap-2">
-                    <div>
-                        <div class="text-sm font-medium text-muted-foreground">Anime</div>
-                        <div class="text-2xl font-bold">{formatHours(stats.anime_minutes)}</div>
-                    </div>
-                    <div>
-                        <div class="text-sm font-medium text-muted-foreground">Visual Novels</div>
-                        <div class="text-2xl font-bold">{formatHours(stats.vn_minutes)}</div>
-                    </div>
+<div class="flex w-full gap-x-4">
+    <!-- Cumulative Time -->
+    <Card.Root class="grow-2">
+        <Card.Header>
+            <Card.Title>Total Immersion Time</Card.Title>
+        </Card.Header>
+        <Card.Content>
+            {#if stats}
+                <div class="pt-2">
+                    <div class="text-4xl text-primary font-bold">{formatHours(stats.total_minutes)}</div>
+                    <div class="text-sm font-medium text-muted-foreground">Since PLACEHOLDER_DATE</div>
                 </div>
-                <div class="pt-2 border-t">
-                    <div class="text-sm font-medium text-muted-foreground">Total</div>
-                    <div class="text-2xl font-bold">{formatHours(stats.total_minutes)}</div>
+            {/if}
+        </Card.Content>
+    </Card.Root>
+
+    <!-- Reading Time -->
+    <Card.Root class="grow-1">
+        <Card.Header>
+            <Card.Title>Total Immersion Time</Card.Title>
+        </Card.Header>
+        <Card.Content>
+            {#if stats}
+                <div class="pt-2">
+                    <div class="text-4xl text-primary font-bold">{formatHours(stats.total_minutes)}</div>
+                    <div class="text-sm font-medium text-muted-foreground">Since PLACEHOLDER_DATE</div>
                 </div>
-            </div>
-        {/if}
-    </Card.Content>
-</Card.Root>
+            {/if}
+        </Card.Content>
+    </Card.Root>
+
+    <!-- Listening Time -->
+    <Card.Root class="grow-1">
+        <Card.Header>
+            <Card.Title>Total Immersion Time</Card.Title>
+        </Card.Header>
+        <Card.Content>
+            {#if stats}
+                <div class="pt-2">
+                    <div class="text-4xl text-primary font-bold">{formatHours(stats.total_minutes)}</div>
+                    <div class="text-sm font-medium text-muted-foreground">Since PLACEHOLDER_DATE</div>
+                </div>
+            {/if}
+        </Card.Content>
+    </Card.Root>
+
+    <!-- Streak -->
+    <Card.Root class="grow-1">
+        <Card.Header>
+            <Card.Title>Total Immersion Time</Card.Title>
+        </Card.Header>
+        <Card.Content>
+            {#if stats}
+                <div class="pt-2">
+                    <div class="text-4xl text-primary font-bold">{formatHours(stats.total_minutes)}</div>
+                    <div class="text-sm font-medium text-muted-foreground">Since PLACEHOLDER_DATE</div>
+                </div>
+            {/if}
+        </Card.Content>
+    </Card.Root>
+</div>

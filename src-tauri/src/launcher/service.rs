@@ -9,6 +9,8 @@ use crate::{
     settings::service::load_config,
 };
 
+// Handles the time-logging aspect of the launch process, starting before the first process is opened.
+// Will wait until the async to finish (the process to close) to record the time spent.
 pub async fn launch_content(content: &Content, episode: Option<Episode>) -> Result<UserActivity> {
     let start_instant = Instant::now();
 
@@ -37,6 +39,8 @@ pub async fn launch_content(content: &Content, episode: Option<Episode>) -> Resu
     Ok(user_activity)
 }
 
+// Spawns a window using the path specified inside of the vn parameter.
+// Textractor will automatically close after the VN is closed.
 async fn launch_vn(vn: &Content) -> Result<()> {
     let config = load_config()?;
     let file_path = vn
@@ -80,6 +84,7 @@ async fn launch_vn(vn: &Content) -> Result<()> {
     Ok(())
 }
 
+// Spawns a window using the user's media player of choice and will wait until that window is closed to complete.
 async fn launch_anime(episode: &Episode) -> Result<()> {
     let config = load_config()?;
     let mut command = Command::new(&config.player.executable);

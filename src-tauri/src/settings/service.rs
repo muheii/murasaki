@@ -31,6 +31,7 @@ pub fn save_config(config: &Config) -> Result<()> {
     Ok(())
 }
 
+// Default path is %appdata%/muhei/murasaki/config/config.json.
 fn get_config_path() -> Result<PathBuf> {
     let proj_dirs = ProjectDirs::from("com", "muhei", "murasaki")
         .ok_or_else(|| anyhow::anyhow!("Failed to get project directories"))?;
