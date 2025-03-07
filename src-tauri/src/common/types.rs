@@ -4,6 +4,24 @@ use serde::{Deserialize, Serialize};
 pub enum ContentType {
     Anime,
     Vn,
+    // Future types:
+    // Manga
+    // Books
+    // YouTube
+}
+
+impl ContentType {
+    pub fn categorize(&self) -> ActivityCategory {
+        match self {
+            ContentType::Anime => ActivityCategory::Listening,
+            ContentType::Vn => ActivityCategory::Reading,
+        }
+    }
+}
+
+pub enum ActivityCategory {
+    Listening,
+    Reading,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]

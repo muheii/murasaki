@@ -1,7 +1,7 @@
 <script>
-	import GraphCard from "$lib/GraphCard.svelte";
 	import StatsCard from "$lib/StatsCard.svelte";
+	import HeatMap from "$lib/HeatMap.svelte";
 
 </script>
 <StatsCard />
-<GraphCard />
+<HeatMap />

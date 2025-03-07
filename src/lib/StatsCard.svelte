@@ -47,64 +47,64 @@
     });
 </script>
 
-<div class="flex w-full gap-x-4">
+<div class="grid grid-cols-8 gap-4 w-full">
     <!-- Cumulative Time -->
-    <Card.Root class="grow-2">
+    <Card.Root class="col-span-2">
         <Card.Header>
             <Card.Title>Total Immersion Time</Card.Title>
         </Card.Header>
         <Card.Content>
-            {#if stats}
-                <div class="pt-2">
+            <div class="flex flex-col gap-2">
+                {#if stats}
                     <div class="text-4xl text-primary font-bold">{formatHours(stats.total_minutes)}</div>
-                    <div class="text-sm font-medium text-muted-foreground">Since PLACEHOLDER_DATE</div>
-                </div>
-            {/if}
+                    <div class="text-sm font-medium text-muted-foreground">Since Dec 12, 2024</div>
+                {/if}
+            </div>
         </Card.Content>
     </Card.Root>
 
     <!-- Reading Time -->
-    <Card.Root class="grow-1">
+    <Card.Root class="col-span-2">
         <Card.Header>
-            <Card.Title>Total Immersion Time</Card.Title>
+            <Card.Title>Reading</Card.Title>
         </Card.Header>
         <Card.Content>
-            {#if stats}
-                <div class="pt-2">
-                    <div class="text-4xl text-primary font-bold">{formatHours(stats.total_minutes)}</div>
-                    <div class="text-sm font-medium text-muted-foreground">Since PLACEHOLDER_DATE</div>
-                </div>
-            {/if}
+            <div class="flex flex-col gap-2">
+                {#if stats}
+                    <div class="text-4xl text-primary font-bold">{formatHours(stats.vn_minutes)}</div>
+                    <div class="text-sm font-medium text-muted-foreground">52.6% of total</div>
+                {/if}
+            </div>
         </Card.Content>
     </Card.Root>
 
     <!-- Listening Time -->
-    <Card.Root class="grow-1">
+    <Card.Root class="col-span-2">
         <Card.Header>
-            <Card.Title>Total Immersion Time</Card.Title>
+            <Card.Title>Listening</Card.Title>
         </Card.Header>
         <Card.Content>
-            {#if stats}
-                <div class="pt-2">
-                    <div class="text-4xl text-primary font-bold">{formatHours(stats.total_minutes)}</div>
-                    <div class="text-sm font-medium text-muted-foreground">Since PLACEHOLDER_DATE</div>
-                </div>
-            {/if}
+            <div class="flex flex-col gap-2">
+                {#if stats}
+                    <div class="text-4xl text-primary font-bold">{formatHours(stats.anime_minutes)}</div>
+                    <div class="text-sm font-medium text-muted-foreground">47.4% of total</div>
+                {/if}
+            </div>
         </Card.Content>
     </Card.Root>
 
     <!-- Streak -->
-    <Card.Root class="grow-1">
+    <Card.Root class="col-span-2">
         <Card.Header>
-            <Card.Title>Total Immersion Time</Card.Title>
+            <Card.Title>Current Streak</Card.Title>
         </Card.Header>
         <Card.Content>
-            {#if stats}
-                <div class="pt-2">
-                    <div class="text-4xl text-primary font-bold">{formatHours(stats.total_minutes)}</div>
-                    <div class="text-sm font-medium text-muted-foreground">Since PLACEHOLDER_DATE</div>
-                </div>
-            {/if}
+            <div class="flex flex-col gap-2">
+                {#if stats}
+                    <div class="text-4xl text-primary font-bold">12 days</div>
+                    <div class="text-sm font-medium text-muted-foreground">Best: 23 days</div>
+                {/if}
+            </div>
         </Card.Content>
     </Card.Root>
 </div>
