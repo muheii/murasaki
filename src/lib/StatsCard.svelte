@@ -1,38 +1,8 @@
 <script lang="ts">
     import { invoke } from '@tauri-apps/api/core';
     import * as Card from '$lib/components/ui/card';
-    import type { ActivityStats } from '../types/stats';
+    import { filteredStats, selectedRange, type TimeRange } from './stores/stats-state.svelte';
 	import { Button } from './components/ui/button';
-
-    type TimeRange = '1d' | '1m' | '1y';
-    let stats: ActivityStats | null = $state(null);
-    let selectedRange = $state<TimeRange>('1d');
-
-    async function loadStats() {
-        const endDate = new Date().toISOString();
-        const startDate = new Date();
-
-        switch (selectedRange) {
-            case '1d':
-                startDate.setDate(startDate.getDate() - 1);
-                break;
-            case '1m':
-                startDate.setMonth(startDate.getMonth() - 1);
-                break;
-            case '1y':
-                startDate.setFullYear(startDate.getFullYear() - 1);
-                break;
-        }
-        
-        try {
-            stats = await invoke('get_activity_stats', {
-                startDate: startDate.toISOString(),
-                endDate
-            });
-        } catch (error) {
-            console.error('Failed to load stats:', error);
-        }
-    }
 
     function formatHours(minutes: number): string {
         const hours = Math.floor(minutes / 60);
@@ -42,12 +12,50 @@
             : `${remainingMinutes}m`;
     }
 
-    $effect(() => {
-        loadStats();
-    });
+    function calculatePercentage(part: number, total: number): string {
+        if (total === 0) return '0%';
+        return `${((part / total) * 100).toFixed(1)}%`;
+    }
+
+    function setTimeRange(range: TimeRange) {
+        selectedRange.set(range);
+    }
+
 </script>
 
 <div class="grid grid-cols-8 gap-4 w-full">
+    <!-- Time range selector -->
+    <div class="col-span-8 flex justify-end gap-2 mb-2">
+        <Button 
+            variant={$selectedRange === '1d' ? 'default' : 'outline'} 
+            onclick={() => setTimeRange('1d')}
+            size="sm"
+        >
+            1 Day
+        </Button>
+        <Button 
+            variant={$selectedRange === '1w' ? 'default' : 'outline'} 
+            onclick={() => setTimeRange('1w')}
+            size="sm"
+        >
+            1 Week
+        </Button>
+        <Button 
+            variant={$selectedRange === '1m' ? 'default' : 'outline'} 
+            onclick={() => setTimeRange('1m')}
+            size="sm"
+        >
+            1 Month
+        </Button>
+        <Button 
+            variant={$selectedRange === '1y' ? 'default' : 'outline'} 
+            onclick={() => setTimeRange('1y')}
+            size="sm"
+        >
+            1 Year
+        </Button>
+    </div>
+
     <!-- Cumulative Time -->
     <Card.Root class="col-span-2">
         <Card.Header>
@@ -55,9 +63,19 @@
         </Card.Header>
         <Card.Content>
             <div class="flex flex-col gap-2">
-                {#if stats}
-                    <div class="text-4xl text-primary font-bold">{formatHours(stats.total_minutes)}</div>
-                    <div class="text-sm font-medium text-muted-foreground">Since Dec 12, 2024</div>
+                {#if $filteredStats}
+                    <div class="text-4xl text-primary font-bold">{formatHours($filteredStats.total_minutes)}</div>
+                    <div class="text-sm font-medium text-muted-foreground">
+                        {#if $selectedRange === '1d'}
+                            Last 24 hours
+                        {:else if $selectedRange === '1w'}
+                            Last week
+                        {:else if $selectedRange === '1m'}
+                            Last month
+                        {:else}
+                            Since {new Date(new Date().setFullYear(new Date().getFullYear() - 1)).toLocaleDateString()}
+                        {/if}
+                    </div>
                 {/if}
             </div>
         </Card.Content>
@@ -70,9 +88,11 @@
         </Card.Header>
         <Card.Content>
             <div class="flex flex-col gap-2">
-                {#if stats}
-                    <div class="text-4xl text-primary font-bold">{formatHours(stats.vn_minutes)}</div>
-                    <div class="text-sm font-medium text-muted-foreground">52.6% of total</div>
+                {#if $filteredStats}
+                    <div class="text-4xl text-primary font-bold">{formatHours($filteredStats.vn_minutes)}</div>
+                    <div class="text-sm font-medium text-muted-foreground">
+                        {calculatePercentage($filteredStats.vn_minutes, $filteredStats.total_minutes)} of total
+                    </div>
                 {/if}
             </div>
         </Card.Content>
@@ -85,9 +105,11 @@
         </Card.Header>
         <Card.Content>
             <div class="flex flex-col gap-2">
-                {#if stats}
-                    <div class="text-4xl text-primary font-bold">{formatHours(stats.anime_minutes)}</div>
-                    <div class="text-sm font-medium text-muted-foreground">47.4% of total</div>
+                {#if $filteredStats}
+                    <div class="text-4xl text-primary font-bold">{formatHours($filteredStats.anime_minutes)}</div>
+                    <div class="text-sm font-medium text-muted-foreground">
+                        {calculatePercentage($filteredStats.anime_minutes, $filteredStats.total_minutes)} of total
+                    </div>
                 {/if}
             </div>
         </Card.Content>
@@ -100,7 +122,7 @@
         </Card.Header>
         <Card.Content>
             <div class="flex flex-col gap-2">
-                {#if stats}
+                {#if $filteredStats}
                     <div class="text-4xl text-primary font-bold">12 days</div>
                     <div class="text-sm font-medium text-muted-foreground">Best: 23 days</div>
                 {/if}

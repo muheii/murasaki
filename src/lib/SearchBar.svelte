@@ -14,7 +14,7 @@
 <div class="flex justify-between gap-2">
     <div class='flex w-full gap-x-2'>
         <Input type="text" value={mode === 'search' ? searchState.query : libraryState.query} 
-            placeholder={mode === 'search' ? "Search for content..." : "Filter library..."} 
+            placeholder={mode === 'search' ? "Search for content..." : "Search library..."} 
             oninput={(e: Event) => {
                 const target = e.target as HTMLInputElement;
 

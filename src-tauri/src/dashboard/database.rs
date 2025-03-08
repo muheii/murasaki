@@ -42,8 +42,8 @@ impl Database {
                 SUM(minutes_watched + minutes_read) as minutes,
                 SUM(minutes_read) as reading_minutes,
                 SUM(minutes_watched) as listening_minutes,
-                SUM(CASE WHEN c.content_type = 'Anime' THEN minutes_watched END) as anime_minutes,
-                SUM(CASE WHEN c.content_type = 'Vn' THEN minutes_read END) as vn_minutes
+                COALESCE(SUM(CASE WHEN c.content_type = 'Anime' THEN minutes_watched END), 0) as anime_minutes,
+                COALESCE(SUM(CASE WHEN c.content_type = 'Vn' THEN minutes_read END), 0) as vn_minutes
             FROM user_activity ua
             JOIN content c ON ua.content_id = c.id
             WHERE ua.date BETWEEN ?1 and ?2
