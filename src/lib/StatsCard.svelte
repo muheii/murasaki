@@ -122,8 +122,8 @@
         <Card.Content>
             <div class="flex flex-col gap-2">
                 {#if $filteredStats}
-                    <div class="text-4xl text-primary font-bold">12 days</div>
-                    <div class="text-sm font-medium text-muted-foreground">Best: 23 days</div>
+                    <div class="text-4xl text-primary font-bold">0 days</div>
+                    <div class="text-sm font-medium text-muted-foreground">Best: 22 days</div>
                 {/if}
             </div>
         </Card.Content>

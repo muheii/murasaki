@@ -113,7 +113,7 @@
                             class="w-full aspect-[3/4] object-cover rounded-md"
                         />
                         <div class="flex flex-col gap-1">
-                            <h3 class="font-medium line-clamp-2">{item.content.title}</h3>
+                            <h3 class="font-medium whitespace-nowrap overflow-hidden text-ellipsis">{item.content.title}</h3>
                             <div class="text-sm text-muted-foreground flex justify-between">
                                 <p>{formatMinutes(item.total_minutes)}</p>
                                 <p>{formatDate(item.last_active)}</p>

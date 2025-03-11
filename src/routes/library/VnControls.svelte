@@ -27,9 +27,9 @@
 </script>
 
 <div class="flex flex-col gap-4">
-    <div class="flex space-x-2">
+    <!-- <div class="flex space-x-2">
         <Input type="text" bind:value={vn.file_path} placeholder="Enter a path..."/>
         <Button onclick={selectPath}>Browse</Button>
-    </div>
+    </div> -->
     <Button onclick={() => launchVn(vn)}>Launch</Button>
 </div>
