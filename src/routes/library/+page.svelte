@@ -10,6 +10,7 @@
 </script>
 
 <div class="flex flex-col gap-y-4">
+    <p class="text-2xl font-bold">Immersion Library</p>
     <SearchBar mode='library' />
     {#if libraryState.isLoading}
         <div>Loading...</div>

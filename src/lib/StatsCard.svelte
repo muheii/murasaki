@@ -1,5 +1,4 @@
 <script lang="ts">
-    import { invoke } from '@tauri-apps/api/core';
     import * as Card from '$lib/components/ui/card';
     import { filteredStats, selectedRange, type TimeRange } from './stores/stats-state.svelte';
 	import { Button } from './components/ui/button';

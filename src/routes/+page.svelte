@@ -20,9 +20,6 @@
 	<div class="space-y-8">
 		<StatsCard />
 		
-		<div class="mt-8">
-			<h3 class="text-lg font-medium mb-4">Activity Heatmap</h3>
-			<HeatMap />
-		</div>
+		<HeatMap />
 	</div>
 {/if}

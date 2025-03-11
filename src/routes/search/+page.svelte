@@ -18,6 +18,7 @@
 </script>
 
 <div class="flex flex-col gap-y-4">
+    <p class="text-2xl font-bold">Search Content</p>
     <SearchBar mode='search' />
 
     {#if searchState.isLoading}
@@ -28,6 +29,11 @@
         <div class="flex flex-col items-center justify-center py-12 text-muted-foreground">
             <p class="text-lg">No results found :(</p>
             <p class="text-sm">Try searching for something else</p>
+        </div>
+    {:else}
+        <div class="flex flex-col items-center justify-center py-12 text-muted-foreground">
+            <p class="text-lg">Start your search!</p>
+            <p class="text-sm">Search for content to add to your library</p>
         </div>
     {/if}
 </div>

@@ -106,32 +106,34 @@
                     </div>
 
                     <!-- VN Settings -->
-                    <div>
-                        <h2 class="text-lg font-semibold">VN Settings</h2>
-                        <p class="text-sm text-muted-foreground">Configure VN settings for VN reading</p>
-                    </div>
+                    <div class="space-y-4">
+                        <div>
+                            <h2 class="text-lg font-semibold">VN Settings</h2>
+                            <p class="text-sm text-muted-foreground">Configure VN settings for VN reading</p>
+                        </div>
 
-                    <Separator />
+                        <Separator />
 
-                    <div class="flex flex-col gap-4">
-                        <div class="grid w-full items-center gap-1.5">
-                            <div class="flex gap-x-2">
-                                <Input readonly bind:value={config.vn.textractor_executable} />
-                                <Button variant="outline" onclick={selectTextractorExecutable}>Browse</Button>
+                        <div class="flex flex-col gap-4">
+                            <div class="grid w-full items-center gap-1.5">
+                                <div class="flex gap-x-2">
+                                    <Input readonly bind:value={config.vn.textractor_executable} />
+                                    <Button variant="outline" onclick={selectTextractorExecutable}>Browse</Button>
+                                </div>
+                                <p class="text-sm text-muted-foreground">Select your textractor exectuable</p>
                             </div>
-                            <p class="text-sm text-muted-foreground">Select your textractor exectuable</p>
-                        </div>
 
-                        <!-- Textractor toggle -->
-                        <div class="flex justify-between">
-                            <p class="text-muted-foreground">Open Textractor on launch</p>
-                            <Switch bind:checked={config.vn.textractor_enabled} />
-                        </div>
+                            <!-- Textractor toggle -->
+                            <div class="flex justify-between">
+                                <p class="text-muted-foreground">Open Textractor on launch</p>
+                                <Switch bind:checked={config.vn.textractor_enabled} />
+                            </div>
 
-                        <!-- Texthooker toggle -->
-                        <div class="flex justify-between">
-                            <p class="text-muted-foreground">Open Anacreon's texthooker on launch</p>
-                            <Switch bind:checked={config.vn.texthooker_enabled} />
+                            <!-- Texthooker toggle -->
+                            <div class="flex justify-between">
+                                <p class="text-muted-foreground">Open Anacreon's texthooker on launch</p>
+                                <Switch bind:checked={config.vn.texthooker_enabled} />
+                            </div>
                         </div>
                     </div>
                 </div>
