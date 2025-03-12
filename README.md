@@ -3,56 +3,7 @@ Murasaki is a multimedia library designed to help you track and enhance your Jap
 
 Writen in blazing-fast Svelte and Rust, Murasaki aims to be a lightweight option for serious learners. This application is built on the Tauri framework, combining web technologies with native performance for a responsive and efficient experience. 
 
-## Key Features
-- Unified library management for anime and visual novels
-- Automatic time tracking to log your immersion activities
-- Activity heatmap to monitor consistency and streaks
-- Seamless media launching that integrates your preferred players
-
-## Roadmap
-Here are the improvements that I would like to make to Murasaki, presented in order of priority:
-- Graph that measures cummulative immersion over time on the dashboard
-- Per-content statistics displays in the details section of each piece of media
-- Browser extension to track immersion on YouTube or ッツ Ebook Reader
-
-## Installation
-[TODO: Include releases]
-
-### Requirements
-- **Windows**: Windows 10 or later
-- **macOS (Untested)**: macOS 10.15 (Catalina) or later
-
-### Building from source
-If you'd like to build Murasaki from source, follow these steps:
-
-#### Prerequisites
-Follow your operating system's guidelines on the [Tauri Prerequisites Guide](https://v2.tauri.app/start/prerequisites/). 
-
-This should have you install Rust, Node.js, and any platform specific dependencies.
-
-#### Build Steps
-Clone the repository:
-```bash
-git clone https://github.com/muheii/murasaki.git
-cd murasaki
-```
-
-Install frontend dependencies:
-```bash
-npm install
-```
-
-To run in development mode:
-```bash
-cargo tauri dev
-```
-
-To build for production:
-```bash
-cargo tauri build
-```
-
-## Gallery
+## Features
 
 <table>
   <tr>
@@ -101,6 +52,49 @@ cargo tauri build
     </td>
   </tr>
 </table>
+
+## Roadmap
+Here are the improvements that I would like to make to Murasaki, presented in order of priority:
+- Graph that measures cummulative immersion over time on the dashboard
+- Per-content statistics displays in the details section of each piece of media
+- Browser extension to track immersion on YouTube or ッツ Ebook Reader
+
+## Installation
+[TODO: Include releases]
+
+### Requirements
+- **Windows**: Windows 10 or later
+- **macOS (Untested)**: macOS 10.15 (Catalina) or later
+
+### Building from source
+If you'd like to build Murasaki from source, follow these steps:
+
+#### Prerequisites
+Follow your operating system's guidelines on the [Tauri Prerequisites Guide](https://v2.tauri.app/start/prerequisites/). 
+
+This should have you install Rust, Node.js, and any platform specific dependencies.
+
+#### Build Steps
+Clone the repository:
+```bash
+git clone https://github.com/muheii/murasaki.git
+cd murasaki
+```
+
+Install frontend dependencies:
+```bash
+npm install
+```
+
+To run in development mode:
+```bash
+cargo tauri dev
+```
+
+To build for production:
+```bash
+cargo tauri build
+```
 
 ## About 
 
