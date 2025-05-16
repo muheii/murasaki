@@ -14,7 +14,14 @@ pub async fn launch_content(
     content: Content,
     episode: Option<Episode>,
 ) -> TAResult<()> {
-    let user_activity = service::launch_content(&content, episode).await?;
-    db.write_user_activity(&user_activity)?;
+    let user_activity = service::launch_content(&content, &episode).await?;
+    db.write_user_activity(&user_activity.0)?;
+
+    if user_activity.1 == true {
+        if let Some(ep) = episode {
+            db.write_completed(&ep)?;
+        }
+    }
+
     Ok(())
 }

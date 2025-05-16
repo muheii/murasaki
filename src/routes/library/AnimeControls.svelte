@@ -28,6 +28,6 @@
 
 <div class="grid grid-cols-8 gap-2">
     {#each episodes as episode}
-        <Button variant="secondary" class="w-full flex items-center font-medium" onclick={() => launchAnime(anime, episode)}>{episode.episode_number}</Button>
+        <Button variant="secondary" class="w-full flex items-center font-medium" onclick={() => launchAnime(anime, episode)}>{episode.watched ? '✔' : episode.episode_number }</Button>
     {/each}
 </div>

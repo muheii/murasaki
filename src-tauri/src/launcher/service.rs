@@ -1,6 +1,6 @@
 use std::{os::windows::process::CommandExt, process::Command, time::Instant};
 
-use anyhow::Result;
+use anyhow::{Ok, Result};
 use chrono::Local;
 
 use crate::{
@@ -11,7 +11,10 @@ use crate::{
 
 // Handles the time-logging aspect of the launch process, starting before the first process is opened.
 // Will wait until the async to finish (the process to close) to record the time spent.
-pub async fn launch_content(content: &Content, episode: Option<Episode>) -> Result<UserActivity> {
+pub async fn launch_content(
+    content: &Content,
+    episode: &Option<Episode>,
+) -> Result<(UserActivity, bool)> {
     let start_instant = Instant::now();
 
     let mut user_activity = UserActivity {
@@ -23,6 +26,8 @@ pub async fn launch_content(content: &Content, episode: Option<Episode>) -> Resu
         content_id: content.id,
     };
 
+    let mut complete = false;
+
     match content.content_type {
         ContentType::Vn => {
             launch_vn(content).await?;
@@ -33,10 +38,15 @@ pub async fn launch_content(content: &Content, episode: Option<Episode>) -> Resu
                 launch_anime(&ep).await?;
             }
             user_activity.minutes_watched = start_instant.elapsed().as_secs() / 60;
+
+            // Naive solution for solving if episode has been watched or not
+            if user_activity.minutes_watched > 18 {
+                complete = true;
+            }
         }
     }
 
-    Ok(user_activity)
+    Ok((user_activity, complete))
 }
 
 // Spawns a window using the path specified inside of the vn parameter.

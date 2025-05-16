@@ -1,5 +1,5 @@
 use anyhow::Result;
-use rusqlite::Result as SqliteResult;
+use rusqlite::{params, Result as SqliteResult};
 
 use crate::{
     common::database::Database,
@@ -52,5 +52,16 @@ impl Database {
         let episodes = episodes.collect::<SqliteResult<Vec<Episode>>>()?;
 
         Ok(episodes)
+    }
+
+    pub fn write_completed(&self, episode: &Episode) -> Result<()> {
+        let conn = self.write()?;
+
+        conn.execute(
+            "UPDATE episodes SET watched = 1 WHERE path = ?1",
+            params![&episode.path],
+        )?;
+
+        Ok(())
     }
 }
