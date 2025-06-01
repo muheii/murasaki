@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { select, scaleThreshold } from 'd3';
-    import { fullYearData } from './stores/stats-state.svelte';
+    import { fullYearData } from '../../stores/stats-state.svelte';
 	import { onMount } from 'svelte';
 
     function renderHeatmap() {

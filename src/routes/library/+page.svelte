@@ -1,5 +1,5 @@
 <script lang="ts">
-	import SearchBar from '../../lib/SearchBar.svelte';
+	import SearchBar from '../../lib/components/ui/SearchBar.svelte';
     import LibraryView from './LibraryView.svelte';
     import { viewState } from '$lib/stores/view-state.svelte';
 	import { libraryState, loadLibrary } from '$lib/stores/library-state.svelte';

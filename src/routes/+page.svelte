@@ -1,6 +1,6 @@
 <script>
-	import StatsCard from "$lib/StatsCard.svelte";
-	import HeatMap from "$lib/HeatMap.svelte";
+	import StatsCard from "$lib/components/ui/StatsCard.svelte";
+	import HeatMap from "$lib/components/ui/HeatMap.svelte";
 	import { onMount } from 'svelte';
 	import { loadActivityData } from "$lib/stores/stats-state.svelte";
 	

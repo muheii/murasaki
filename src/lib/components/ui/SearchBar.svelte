@@ -1,12 +1,12 @@
 <script lang="ts">
-	import { Input } from "./components/ui/input";
+	import { Input } from "./input";
 	import * as Select from "$lib/components/ui/select/index.js";
-	import { ContentType } from "../types/content";
-	import { Button } from "./components/ui/button";
+	import { ContentType } from "../../../types/content";
+	import { Button } from "./button";
 	import { LayoutGrid, List } from "lucide-svelte";
     import { viewState } from '$lib/stores/view-state.svelte';
-	import { searchState } from "./stores/search-state.svelte";
-	import { libraryState } from "./stores/library-state.svelte";
+	import { searchState } from "../../stores/search-state.svelte";
+	import { libraryState } from "../../stores/library-state.svelte";
 
     let { mode = 'search' } = $props<{ mode: 'search' | 'library' }>();
 </script>

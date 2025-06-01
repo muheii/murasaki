@@ -23,6 +23,7 @@
         "fullscreen": false,
         "height": 720,
         "resizable": false,
+        "maximizable": false,
         "title": "murasaki",
         "width": 1280
       }

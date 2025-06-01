@@ -1,7 +1,7 @@
 <script lang="ts">
     import * as Card from '$lib/components/ui/card';
-    import { filteredStats, selectedRange, type TimeRange } from './stores/stats-state.svelte';
-	import { Button } from './components/ui/button';
+    import { filteredStats, selectedRange, type TimeRange } from '../../stores/stats-state.svelte';
+	import { Button } from './button';
 
     function formatHours(minutes: number): string {
         const hours = Math.floor(minutes / 60);

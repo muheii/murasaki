@@ -2,7 +2,7 @@
 	import { ArrowDown, ArrowUp, ArrowUpDown, LayoutGrid, List } from "lucide-svelte";
     import type { Content, ContentWithStats } from "../../types/content";
 	import { Button } from "$lib/components/ui/button";
-	import ContentDialog from "$lib/ContentDialog.svelte";
+	import ContentDialog from "$lib/components/content/ContentDialog.svelte";
 	import Dropdown from "./Dropdown.svelte";
     import { libraryState, getHandledItems } from "$lib/stores/library-state.svelte";
 	import { updateSort, viewState } from "$lib/stores/view-state.svelte";
@@ -85,11 +85,11 @@
                                 <td class="p-4">
                                     <img
                                         src={item.content.image_path}
-                                        alt={item.content.title}
+                                        alt={item.content.title_japanese}
                                         class="w-12 h-12 object-cover rounded-sm"
                                     />
                                 </td>
-                                <td class="p-4">{item.content.title}</td>
+                                <td class="p-4">{item.content.title_japanese}</td>
                                 <td class="p-4">{formatMinutes(item.total_minutes)}</td>
                                 <td class="p-4">{formatDate(item.last_active)}</td>
                                 <td class="p-4">
@@ -109,11 +109,11 @@
                     <div class="flex flex-col gap-2 p-4 rounded-lg border border-border hover:bg-accent/50">
                         <img
                             src={item.content.image_path}
-                            alt={item.content.title}
+                            alt={item.content.title_japanese}
                             class="w-full aspect-[3/4] object-cover rounded-md"
                         />
                         <div class="flex flex-col gap-1">
-                            <h3 class="font-medium whitespace-nowrap overflow-hidden text-ellipsis">{item.content.title}</h3>
+                            <h3 class="font-medium whitespace-nowrap overflow-hidden text-ellipsis">{item.content.title_japanese}</h3>
                             <div class="text-sm text-muted-foreground flex justify-between">
                                 <p>{formatMinutes(item.total_minutes)}</p>
                                 <p>{formatDate(item.last_active)}</p>

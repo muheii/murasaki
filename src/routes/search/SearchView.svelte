@@ -2,7 +2,7 @@
 	import { ArrowDown, ArrowUp, ArrowUpDown, LayoutGrid, List } from "lucide-svelte";
     import type { Content, ContentWithStats } from "../../types/content";
 	import { Button } from "$lib/components/ui/button";
-	import ContentDialog from "$lib/ContentDialog.svelte";
+	import ContentDialog from "$lib/components/content/ContentDialog.svelte";
 	import Dropdown from "../library/Dropdown.svelte";
     import { searchState, getSortedResults } from '$lib/stores/search-state.svelte';
     import { viewState, toggleViewMode, updateSort } from '$lib/stores/view-state.svelte';

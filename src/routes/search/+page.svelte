@@ -1,13 +1,13 @@
 <script lang="ts">
     import { invoke } from '@tauri-apps/api/core';
     import { ContentType, type Content } from '../../types/content';
-	import SearchBar from '$lib/SearchBar.svelte';
+	import SearchBar from '$lib/components/ui/SearchBar.svelte';
 	import { Input } from '$lib/components/ui/input';
 	import { Button } from '$lib/components/ui/button';
     import { Toaster } from '$lib/components/ui/sonner';
 	import { toast } from 'svelte-sonner';
 	import SearchSkeleton from './SearchSkeleton.svelte';
-	import ContentDialog from '$lib/ContentDialog.svelte';
+	import ContentDialog from '$lib/components/content/ContentDialog.svelte';
 	import SearchView from './SearchView.svelte';
     import { viewState } from '$lib/stores/view-state.svelte';
     import { searchState, search, cleanup } from '$lib/stores/search-state.svelte';
